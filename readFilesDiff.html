@@ -268,14 +268,12 @@
           var imgWidth = 700;
           html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathEN + "' style='max-width: " + imgWidth + "px'></img></td>"
 
-          html += "<td></td>"
+          // image fl
+          if (transSSchecked) {
+            html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-img='" + imgPathFL + "' data-diff='" + imgPathDiff + "' class='image-diff'></div></div></td>"
 
-          // // image fl
-          // if (transSSchecked) {
-          //   html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-img='" + imgPathFL + "' data-diff='" + imgPathDiff + "' class='image-diff'></div></div></td>"
-
-          //   // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
-          // }
+            // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
+          }
         } else {
           html += "<td colspan='" + (transSSchecked ? 2 : 1) + "' rowspan=" + Object.keys(newData.screens[s]).length + "></td>";
         }
