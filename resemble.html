@@ -1,0 +1,103 @@
+<html>
+<head>
+	<style>
+		#image-diff {
+		    width: 100%;
+		    height: 100%;
+		    position: relative;
+		    top: 0;
+		    left: 0;
+		    background-image: url('ex/TD0157/hu_HU/2018.11.08/SS/PROMIS-29_002_PROMIS29_PR020.png');
+		    background-size: contain;
+		    background-position: center;
+		    background-repeat: no-repeat;
+		}
+
+		#image-container {
+			width: 600px;
+			height: 353px;
+		}
+
+		/*#image-diff:hover {
+		   background-image: url('LibraryHoverTrans.png');
+		}*/
+
+		/*#Library {
+		   background-image: url('LibraryTransparent.png');
+		   height: 70px;
+		   width: 120px;
+		}*/
+
+		
+	</style>
+</head>
+
+<body>
+
+<div id="image-container">
+	<div id="image-diff"></div>
+</div>
+<!-- <img width="600" src='ex/TD0157/hu_HU/2018.10.22/SS/PROMIS-29_002_PROMIS29_PR020.png'></img> -->
+<!-- <img width="600" src='ex/TD0157/hu_HU/2018.11.08/SS/PROMIS-29_002_PROMIS29_PR020.png'></img> -->
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="lib/resemble.js"></script>
+
+<script>
+
+resemble.outputSettings({ errorType: "movement", transparency: 0.6 });
+var oldImage = 'ex/TD0157/hu_HU/2018.10.22/SS/PROMIS-29_002_PROMIS29_PR020.png';
+var newImage = 'ex/TD0157/hu_HU/2018.11.08/SS/PROMIS-29_002_PROMIS29_PR020.png';
+resemble(oldImage).compareTo(newImage).onComplete(onComplete);
+
+var diffImageSrc = "";
+
+function onComplete(data) {
+	console.log(data);
+	var diffImage = new Image();
+	diffImage.src = data.getImageDataUrl();
+	diffImageSrc = data.getImageDataUrl();
+
+	$(diffImage).click(function(){
+		var w = window.open("about:blank", "_blank");
+		var html = w.document.documentElement;
+		var body = w.document.body;
+
+		html.style.margin = 0;
+		html.style.padding = 0;
+		body.style.margin = 0;
+		body.style.padding = 0;
+
+		var img = w.document.createElement("img");
+		img.src = diffImage.src;
+		img.alt = "image diff";
+		img.style.maxWidth = "100%";
+		// img.addEventListener("click", function() {
+		// 	this.style.maxWidth = this.style.maxWidth === "100%" ? "" : "100%";
+		// });
+		body.appendChild(img);
+	});
+
+	// $('#image-diff').html(diffImage);
+	// resemble.outputSettings({ useCrossOrigin: false });
+}
+
+$("#image-diff").hover(
+    function () {
+    	// background-image
+    	
+    	// console.log(diffImageSrc)
+
+    	$(this).css('background-image', "url(" + diffImageSrc + ")");
+    	console.log('hover in...', $(this).css('background-image'))
+         // $(this).attr("src", diffImageSrc);
+    },
+    function () {
+    	console.log('hover out...', $(this).css('background-image'))
+        $(this).css('background-image', "url(" + newImage + ")");
+    }
+);
+
+</script>
+</body>
+</html>

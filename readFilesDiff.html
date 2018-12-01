@@ -25,7 +25,7 @@
       }
     </style>
   </head>
-  <body>
+  <body style="font-family: sans-serif;">
     <div class="container-fluid">
 
       <div class="row p-3">
@@ -48,6 +48,11 @@
             <input type="file" id="newfiles" class="custom-file-input" name="files[]" multiple />
             <label class="custom-file-label" for="defaultCheck1">New Files</label>
           </div>
+        </div>
+        <div class="col-sm-auto offset-md-1">
+          <select class="custom-select" id="selectjson">
+            <option selected disabled>(choose a json)</option>
+          </select>
         </div>
         <div class="col-sm-auto">
           <button class="btn btn-primary" id="display">Display</button>
@@ -80,7 +85,9 @@
 <script>
       
   function readFile(f, ver) {
-    $('#text ul').append('<li><strong>' + ver.toUpperCase() + ": " + escape(f.name) + '</strong> (' + (f.type || 'n/a') + ') - ' + f.size + ' bytes, last modified: ' + (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a') + '</li>');
+    // $('#text ul').append('<li><strong>' + ver.toUpperCase() + ": " + escape(f.name) + '</strong> (' + (f.type || 'n/a') + ') - ' + f.size + ' bytes, last modified: ' + (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a') + '</li>');
+    $('#text ul').append('<li><strong>' + ver.toUpperCase() + ": " + escape(f.name) + '</strong> - ' + f.size + ' bytes, last modified: ' + (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a') + '</li>');
+
 
     var reader = new FileReader();
     var object = {};
@@ -127,6 +134,13 @@
 
       if (!jsons[ver][langCode]) {
         jsons[ver][langCode]= {};
+        if (ver == "new") {
+          $('#selectjson').append("<option disabled>" + langCode + "</option>");
+        }
+      }
+
+      if (ver == "new") {
+        $('#selectjson option:contains(' + langCode + ')').parent().append("<option data-lang='" + langCode + "' data-name='" + name + "'>" + name + "</option>");
       }
 
       jsons[ver][langCode][name] = object;
@@ -135,7 +149,7 @@
       //   json[ver][langCode] = {};
       // }
 
-      console.log(jsons);
+      // console.log(jsons);
       // jsons[ver][langCode][name] = object;
 
       // console.log(jsons);
@@ -145,8 +159,30 @@
   }
 
   function displayDiff(langCode, name) {
+
+    // warnings
+    if (!jsons.old[langCode]) {
+      alert("No old " + langCode + " jsons were selected.");
+      return
+    }
+
+    if (!jsons.old[langCode][name]) {
+      alert("No old " + langCode + " " + name + " json was selected.");
+      return
+    }
+
+    if (!jsons.new[langCode]) {
+      alert("No new " + langCode + " jsons were selected.");
+      return
+    }
+    if (!jsons.new[langCode][name]) {
+      alert("No new " + langCode + " " + name + " json was selected.");
+      return
+    }
+
     var oldData = jsons.old[langCode][name];
     var newData = jsons.new[langCode][name];
+
     var transSSchecked = $('#transSScheck').is(":checked");
 
     // console.log(oldData);
@@ -162,9 +198,10 @@
       var diff = diffString(oldHeader[h], newHeader[h]);
       $thead.append("<tr class='table-secondary'><th colspan='" + (transSSchecked ? 2 : 1) + "'></th>" +
                     "<th>" + h + "</th>" + 
-                    "<th style='width: 125px; max-width: 125px' class='pr-3'>" + diff + "</th>" +
                     "<th style='min-width: 350px'>" + newHeader[h] + "</th>" +
-                    "<th style='min-width: 300px'></th></tr>");
+                    "<th style='min-width: 300px'></th>" +
+                    "<th style='width: 125px; max-width: 125px' class='pr-3'>" + diff + "</th>" +
+                    "</tr>");
     }
 
     $tbody.append(function() {
@@ -173,9 +210,9 @@
 
       for (var s in newData.screens) {
         var screenNameOnly = s.slice(s.indexOf('_') + 1);
-        console.log(screenNameOnly);
+        // console.log(screenNameOnly);
 
-        html += "<tr class='table-primary'><th colspan='" + (transSSchecked ? 2 : 1) + "' class='py-3'>" + s + "</th><th class='py-3'>" + screenNameOnly + "</th><th class='py-3 pr-3'>Diff</th><th class='py-3'>New (Formatted)</th><th class='py-3'>Edit</th></tr><tr>"
+        html += "<tr class='table-primary'><th colspan='" + (transSSchecked ? 2 : 1) + "' class='py-3'>" + s + "</th><th class='py-3'>" + screenNameOnly + "</th><th class='py-3'>New (Formatted)</th><th class='py-3'>Edit</th><th class='py-3 pr-3'>Diff</th></tr><tr>"
 
         if (s !== "DISPLAY_NAME") {
           var screenNumStr = "";
@@ -191,7 +228,7 @@
           var imgPathFL = "ex/TD0157/" + langCode + "/SS/PROMIS-29_" + screenNumStr + "_" + s + ".png";
           // console.log(imgPath);
 
-          var imgWidth = 750;
+          var imgWidth = 700;
           html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathEN + "' style='max-width: " + imgWidth + "px'></img></td>"
 
           if (transSSchecked) {
@@ -222,9 +259,9 @@
           var codeFontSize = 85;
 
           html += "<th style='min-width: 100px; width: 125px; max-width: 150px; white-space: normal; word-break:break-all;'>" + line.slice(15) + "</th>" +
-            "<td style='font-size: " + codeFontSize + "%; word-break: break-all; width: 250px; max-width: 250px' class='pr-3'>" + diff + "</td>" +
             "<td>" + newData.screens[s][line] + "</td>" +
             "<td><textarea class='form-control' style='width: 100%; font-size: " + codeFontSize + "%; word-break: break-all' rows='" + rows + "'>" + newData.screens[s][line] + "</textarea></td>" +
+            "<td style='font-size: " + codeFontSize + "%; word-break: break-all; width: 250px; max-width: 250px' class='pr-3'>" + diff + "</td>" +
             "</tr>"
           firstline = false;
         }
@@ -275,7 +312,12 @@
   });
 
   $('#display').click(function() {
-    displayDiff("hu_HU", "PROMIS29");
+    $('#text ul, #output thead, #output tbody').empty();
+    var $selected = $('#selectjson').find(":selected");
+    var langCode = $selected.data('lang');
+    var name = $selected.data('name');
+    // console.log(langCode, name)
+    displayDiff(langCode, name);
   });
 
 </script>
