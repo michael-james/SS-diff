@@ -11,7 +11,7 @@
     <title>Hello, world!</title>
   </head>
   <body>
-    <div class="container">
+    <div class="container-fluid">
 
       <div class="p-3">
         <input type="file" id="files" class="form-control-file" name="files[]" multiple />
@@ -20,7 +20,8 @@
       <output id="text">
         <ul></ul>
       </output>
-      <table class='table table-hover table-sm mb-5' id="output">
+      <table class='table table-responsive table-hover table-sm mb-5' id="output">
+        <thead class='thead-dark'></thead>
         <tbody></tbody>
       </table>
 
@@ -72,7 +73,7 @@
 
       var result = reader.result;
 
-      console.log(result);
+      // console.log(result);
 
       // allText.push(text);
       var json = JSON.parse(result);
@@ -87,11 +88,12 @@
       for (var j in json.resources) {
         // allText.push(j);
         var screen = j.substr(0, 14);
-        // console.log(screen); 
+        console.log(screen);
         var val = json.resources[j];
+        console.log(val);
         // console.log(j.substr(0,14));
 
-        if (screens[screen] !== 'undefined') {
+        if (!screens[screen]) {
           screens[screen] = {};
         }
 
@@ -100,25 +102,62 @@
         // html += "<tr><th>" + j + "</th><td>" + json.resources[j] + "</td></tr>"
       };
       // console.log(j.namespace)
+      console.log(screens);
 
+      var $thead = $('#output thead');
       var $tbody = $('#output tbody');
 
       var header = {name: json.namespace, langCode: json.language + "_" + json.locale, dir: json.direction}
 
       for (var h in header) {
-        $tbody.append("<tr class='table-secondary'><th>" + h + "</th><th>" + header[h] + "</th></tr>");
+        $thead.append("<tr class='table-secondary'><th></th><th>" + h + "</th><th>" + header[h] + "</th><th></th></tr>");
       }
 
       $tbody.append(function() {
         html = "";
+        var screenNum = 0;
 
         for (var s in screens) {
-          html += "<tr class='table-primary'><th colspan='2'>" + s + "</th></tr>";
+          html += "<tr class='table-primary'><th colspan='4'>" + s + "</th></tr>" +
+                  "<tr><th rowspan=" + Object.keys(screens[s]).length + ">"
+
+          if (s !== "DISPLAY_NAME") {
+            var screenNumStr = "";
+            if (screenNum < 100) {
+              screenNumStr += "0";
+              if (screenNum < 10) {
+                screenNumStr += "0";
+              }
+            }
+            screenNumStr += screenNum;
+
+            var imgPath = "ex/TD0157/en_US/SS/PROMIS-29_" + screenNumStr + "_" + s + ".png";
+            console.log(imgPath);
+
+            var imgWidth = 800;
+            html += "<img src='" + imgPath + "' style='max-width: " + imgWidth + "px'></img>"
+            
+          }
+
+          html += "</th>";
+
+          var firstline = true;
 
           for (var line in screens[s]) {
-            html += "<tr><th>" + line + "</th><td>" + screens[s][line] + "</td></tr>"
+            if (!firstline) {
+              html += "<tr>";
+            }
+
+            var rows = screens[s][line].length > 70 ? 3 : (screens[s][line].length > 40 ? 2 : 1);
+
+            html += "<th>" + line + "</th><td>" + screens[s][line] + "</td><td><textarea style='width: 300px' rows='" + rows + "'>" + screens[s][line] + "</textarea></td></tr>"
+            firstline = false;
           }
+
+          screenNum++;
         }
+
+        // console.log(html);
 
         return html
       });
@@ -136,7 +175,7 @@
       
     }
 
-    console.log(text);
+    // console.log(text);
 
     // var allText = [{hi: 'michael'}];
     // JSON.stringify(allText[0]);
