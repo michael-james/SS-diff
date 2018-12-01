@@ -11,6 +11,9 @@
     <title>Screenshot Review DEMO</title>
 
     <style>
+
+      /*text diff*/
+
       del {
         /*background: #FFE6E6;*/
         background: #f79c9c;
@@ -22,6 +25,25 @@
       }
       mute {
         color: #c6cace;
+      }
+
+      /*image diff*/
+
+      #image-diff {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        top: 0;
+        left: 0;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      #image-container {
+        /*aspect ratio for tablet is 1.7*/
+        width: 700px;
+        height: 412px;
       }
     </style>
   </head>
@@ -231,8 +253,11 @@
           var imgWidth = 700;
           html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathEN + "' style='max-width: " + imgWidth + "px'></img></td>"
 
+          // image fl
           if (transSSchecked) {
-           html += "<th rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
+            html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")'></div></div></td>"
+
+            // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
           }
         } else {
           html += "<td colspan='" + (transSSchecked ? 2 : 1) + "' rowspan=" + Object.keys(newData.screens[s]).length + "></td>";
@@ -319,6 +344,9 @@
     // console.log(langCode, name)
     displayDiff(langCode, name);
   });
+
+  // testing
+  // displayDiff("hu_HU", "PROMIS29");
 
 </script>
 </body>
