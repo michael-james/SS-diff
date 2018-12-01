@@ -1,8 +1,39 @@
-<input type="file" id="files" name="files[]" multiple />
-<output id="list"></output>
-<output style="white-space: pre-wrap" id="text"></output>
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<script src="diff.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="p-3">
+        <input type="file" id="files" class="form-control-file" name="files[]" multiple />
+      </div>
+      <output id="list"></output>
+      <output style="white-space: pre-wrap" id="text"></output>
+      <table class='table table-hover table-sm mb-5' id="output">
+        <tbody></tbody>
+      </table>
+
+    </div>
+  </body>
+
+
+
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <script src="diff.js"></script>
 
 <script>
   function handleFileSelect(evt) {
@@ -20,19 +51,67 @@
                   '</li>');
 
         var allText = [];
+        var html = "";
 
     var reader = new FileReader();
 
     reader.onload = function(e) {
       var text = reader.result;
       // allText.push(text);
-      var j = JSON.parse(text);
+      var json = JSON.parse(text);
+
+      // const ordered = {};
+      // Object.keys(unordered).sort().forEach(function(key) {
+      //   ordered[key] = unordered[key];
+      // });
+
+      var screens = {};
+
+      for (var j in json.resources) {
+        // allText.push(j);
+        var screen = j.substr(0, 14);
+        console.log(screen);
+        var text = json.resources[j];
+        // console.log(j.substr(0,14));
+
+        if (!screens[screen]) {
+          screens[screen] = {};
+        }
+
+        screens[screen][j] = text;
+
+
+        // html += "<tr><th>" + j + "</th><td>" + json.resources[j] + "</td></tr>"
+      };
       // console.log(j.namespace)
-      allText.push(j);
+
+      var $tbody = $('#output tbody');
+
+      var header = {name: json.namespace, langCode: json.language + "_" + json.locale, dir: json.direction}
+
+      for (var h in header) {
+        $tbody.append("<tr class='table-secondary'><th>" + h + "</th><th>" + header[h] + "</th></tr>");
+      }
+
+      $tbody.append(function() {
+        html = "";
+
+        for (var s in screens) {
+          html += "<tr class='table-primary'><th colspan='2'>" + s + "</th></tr>";
+
+          for (var line in screens[s]) {
+            html += "<tr><th>" + line + "</th><td>" + screens[s][line] + "</td></tr>"
+          }
+        }
+
+        return html
+      });
+      
       // console.log(JSON.stringify(j));
       //console.log(text);
-      console.log(allText[0]);
-      document.getElementById('text').innerHTML = document.getElementById('text').innerHTML + '<ul>' + JSON.stringify(allText[0], null, 4); + '</ul>';
+      // console.log(JSON.stringify(json));
+      // document.getElementById('text').innerHTML = document.getElementById('text').innerHTML + '<ul>' + JSON.stringify(allText, null, 4); + '</ul>';
+      // document.getElementById('text').innerHTML = document.getElementById('text').innerHTML + '<table class="table">' + html + '</table>';
 
       
     }
@@ -47,10 +126,16 @@
     
     console.log(allText[0]);
 
-    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+    // document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
 
-    document.getElementById('text').innerHTML = '<ul>' + allText.join(''); + '</ul>';
+    // document.getElementById('text').innerHTML = '<ul>' + allText.join(''); + '</ul>';
+
+    // document.getElementById('text').innerHTML = '<ul>' + JSON.stringify(json) + '</ul>';
+
+    
   }
 
   document.getElementById('files').addEventListener('change', handleFileSelect, false);
 </script>
+</body>
+</html>
