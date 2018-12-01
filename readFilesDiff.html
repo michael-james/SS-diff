@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="p-3">
+        <input type="file" id="files" class="form-control-file" name="files[]" multiple />
+      </div>
+      <output id="list"></output>
+      <output id="text">
+        <ul></ul>
+      </output>
+      <table class='table table-hover table-sm mb-5' id="output">
+        <tbody></tbody>
+      </table>
+
+    </div>
+  </body>
+
+
+
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <script src="diff.js"></script>
+
+<script>
+  var text = [];
+
+  function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    $('#text ul, #output tbody').empty();    
+
+    // files is a FileList of File objects. List some properties.
+    
+    for (var i = 0, f; f = files[i]; i++) {
+      var ver = "";
+      if (i == 0) {
+        ver = "old";
+      } else if (i == 1) {
+        ver = "new";
+      } else {
+        ver = "new" + i
+      }
+
+      
+
+      $('#text ul').append('<li><strong>' + ver.toUpperCase() + ": " + escape(f.name) + '</strong> (' + (f.type || 'n/a') + ') - ' + f.size + ' bytes, last modified: ' + (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a') + '</li>');
+
+      screens = {};
+
+      var reader = new FileReader();
+
+    reader.onload = function(e) {
+      console.log(e)
+
+      console.log()
+
+      var result = reader.result;
+
+      console.log(result);
+
+      // allText.push(text);
+      var json = JSON.parse(result);
+
+      // const ordered = {};
+      // Object.keys(unordered).sort().forEach(function(key) {
+      //   ordered[key] = unordered[key];
+      // });
+
+      var screens = {};
+
+      for (var j in json.resources) {
+        // allText.push(j);
+        var screen = j.substr(0, 14);
+        // console.log(screen); 
+        var val = json.resources[j];
+        // console.log(j.substr(0,14));
+
+        if (screens[screen] !== 'undefined') {
+          screens[screen] = {};
+        }
+
+        screens[screen][j] = val;
+
+        // html += "<tr><th>" + j + "</th><td>" + json.resources[j] + "</td></tr>"
+      };
+      // console.log(j.namespace)
+
+      var $tbody = $('#output tbody');
+
+      var header = {name: json.namespace, langCode: json.language + "_" + json.locale, dir: json.direction}
+
+      for (var h in header) {
+        $tbody.append("<tr class='table-secondary'><th>" + h + "</th><th>" + header[h] + "</th></tr>");
+      }
+
+      $tbody.append(function() {
+        html = "";
+
+        for (var s in screens) {
+          html += "<tr class='table-primary'><th colspan='2'>" + s + "</th></tr>";
+
+          for (var line in screens[s]) {
+            html += "<tr><th>" + line + "</th><td>" + screens[s][line] + "</td></tr>"
+          }
+        }
+
+        return html
+      });
+      
+      // console.log(JSON.stringify(j));
+      //console.log(text);
+      // console.log(JSON.stringify(json));
+      // document.getElementById('text').innerHTML = document.getElementById('text').innerHTML + '<ul>' + JSON.stringify(allText, null, 4); + '</ul>';
+      // document.getElementById('text').innerHTML = document.getElementById('text').innerHTML + '<table class="table">' + html + '</table>';
+
+      text.push(screens);
+    }
+      reader.readAsText(f);
+
+      
+    }
+
+    console.log(text);
+
+    // var allText = [{hi: 'michael'}];
+    // JSON.stringify(allText[0]);
+
+
+    
+    // console.log(allText[0]);
+
+    // document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+
+    // document.getElementById('text').innerHTML = '<ul>' + allText.join(''); + '</ul>';
+
+    // document.getElementById('text').innerHTML = '<ul>' + JSON.stringify(json) + '</ul>';
+
+    
+  }
+
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+</script>
+</body>
+</html>
