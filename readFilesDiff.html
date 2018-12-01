@@ -9,6 +9,21 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <title>Screenshot Review DEMO</title>
+
+    <style>
+      del {
+        /*background: #FFE6E6;*/
+        background: #f79c9c;
+      }
+      ins {
+        /*background: #E6FFE6;*/
+        background: #b4fbb4;
+        text-decoration: none;
+      }
+      mute {
+        color: #c6cace;
+      }
+    </style>
   </head>
   <body>
     <div class="container-fluid">
@@ -23,9 +38,23 @@
           </div>
         </div>
         <div class="col-sm-auto">
-          <input type="file" id="files" class="form-control-file" name="files[]" multiple />
+          <div class="custom-file">
+            <input type="file" id="oldfiles" class="custom-file-input" name="files[]" multiple />
+            <label class="custom-file-label" for="defaultCheck1">Old Files</label>
+          </div>
+        </div>
+        <div class="col-sm-auto">
+          <div class="custom-file">
+            <input type="file" id="newfiles" class="custom-file-input" name="files[]" multiple />
+            <label class="custom-file-label" for="defaultCheck1">New Files</label>
+          </div>
+        </div>
+        <div class="col-sm-auto">
+          <button class="btn btn-primary" id="display">Display</button>
+          <button class="btn btn-dark" id="reset">Reset</button>
         </div>
       </div>
+
       <output id="list"></output>
       <output id="text">
         <ul></ul>
@@ -46,53 +75,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-    <script src="diff.js"></script>
+    <script src="diff-SS.js"></script>
 
 <script>
-  var text = [];
-
-  function handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
-
-    $('#text ul, #output tbody').empty();    
-
-    // files is a FileList of File objects. List some properties.
-    
-    for (var i = 0, f; f = files[i]; i++) {
-      var ver = "";
-      if (i == 0) {
-        ver = "old";
-      } else if (i == 1) {
-        ver = "new";
-      } else {
-        ver = "new" + i
-      }
-
       
+  function readFile(f, ver) {
+    $('#text ul').append('<li><strong>' + ver.toUpperCase() + ": " + escape(f.name) + '</strong> (' + (f.type || 'n/a') + ') - ' + f.size + ' bytes, last modified: ' + (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a') + '</li>');
 
-      $('#text ul').append('<li><strong>' + ver.toUpperCase() + ": " + escape(f.name) + '</strong> (' + (f.type || 'n/a') + ') - ' + f.size + ' bytes, last modified: ' + (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a') + '</li>');
-
-      screens = {};
-
-      var reader = new FileReader();
+    var reader = new FileReader();
+    var object = {};
 
     reader.onload = function(e) {
+      var screens = {};
       // console.log(e)
 
       var result = reader.result;
-      var transSSchecked = $('#transSScheck').is(":checked");
 
       // console.log(result);
 
       // allText.push(text);
       var json = JSON.parse(result);
 
+      var langCode = f.name.slice(-10).slice(0, 5);
+      var langCodeJSON = json.language + "_" + json.locale;
+      var name = json.namespace;
+      object = {name: name, langCode: langCodeJSON, dir: json.direction, screens: {}};
+
       // const ordered = {};
       // Object.keys(unordered).sort().forEach(function(key) {
       //   ordered[key] = unordered[key];
       // });
-
-      var screens = {};
 
       for (var j in json.resources) {
         // allText.push(j);
@@ -102,112 +114,170 @@
         // console.log(val);
         // console.log(j.substr(0,14));
 
-        if (!screens[screen]) {
-          screens[screen] = {};
+        if (!object.screens[screen]) {
+          object.screens[screen] = {};
         }
 
-        screens[screen][j] = val;
+        // console.log(j);
+        // console.log(val);
 
-        // html += "<tr><th>" + j + "</th><td>" + json.resources[j] + "</td></tr>"
+        object.screens[screen][j] = val;
+        // console.log(object.screens[screen]);
       };
-      // console.log(j.namespace)
-      // console.log(screens);
 
-      var $thead = $('#output thead');
-      var $tbody = $('#output tbody');
-
-      var langCode = json.language + "_" + json.locale;
-
-      var header = {name: json.namespace, langCode: langCode, dir: json.direction}
-
-      for (var h in header) {
-        $thead.append("<tr class='table-secondary'><th colspan='" + (transSSchecked ? 2 : 1) + "'></th><th>" + h + "</th><th style='min-width: 400px'>" + header[h] + "</th><th style='min-width: 500px'></th></tr>");
+      if (!jsons[ver][langCode]) {
+        jsons[ver][langCode]= {};
       }
 
-      $tbody.append(function() {
-        html = "";
-        var screenNum = 0;
+      jsons[ver][langCode][name] = object;
 
-        for (var s in screens) {
-          html += "<tr class='table-primary'><th colspan='" + (transSSchecked ? 2 : 1) + "' class='pt-3'>" + s + "</th><th colspan='3' class='pt-3'>" + s + "</th></tr><tr>"
+      // if (!json[ver][langCode]) {
+      //   json[ver][langCode] = {};
+      // }
 
-          if (s !== "DISPLAY_NAME") {
-            var screenNumStr = "";
-            if (screenNum < 100) {
-              screenNumStr += "0";
-              if (screenNum < 10) {
-                screenNumStr += "0";
-              }
-            }
-            screenNumStr += screenNum;
+      console.log(jsons);
+      // jsons[ver][langCode][name] = object;
 
-            var imgPathEN = "ex/TD0157/en_US/SS/PROMIS-29_" + screenNumStr + "_" + s + ".png";
-            var imgPathFL = "ex/TD0157/" + langCode + "/SS/PROMIS-29_" + screenNumStr + "_" + s + ".png";
-            // console.log(imgPath);
-
-            var imgWidth = 750;
-            html += "<td rowspan=" + Object.keys(screens[s]).length + "><img src='" + imgPathEN + "' style='max-width: " + imgWidth + "px'></img></td>"
-
-            if (transSSchecked) {
-             html += "<th rowspan=" + Object.keys(screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
-            }
-          } else {
-            html += "<td colspan='" + (transSSchecked ? 2 : 1) + "' rowspan=" + Object.keys(screens[s]).length + "></td>";
-          }
-
-          var firstline = true;
-
-          for (var line in screens[s]) {
-            if (!firstline) {
-              html += "<tr>";
-            }
-
-            var rows = screens[s][line].length > 125 ? 3 : (screens[s][line].length > 65 ? 2 : 1);
-
-            html += "<th style='min-width: 125px; width: 260px; max-width: 260px; white-space: normal; word-break:break-all;'>" + line.slice(15) + "</th><td>" + screens[s][line] + "</td><td><textarea style='width: 100%; font-size: 90%' rows='" + rows + "'>" + screens[s][line] + "</textarea></td></tr>"
-            firstline = false;
-          }
-
-          screenNum++;
-        }
-
-        // console.log(html);
-
-        return html
-      });
-      
-      // console.log(JSON.stringify(j));
-      //console.log(text);
-      // console.log(JSON.stringify(json));
-      // document.getElementById('text').innerHTML = document.getElementById('text').innerHTML + '<ul>' + JSON.stringify(allText, null, 4); + '</ul>';
-      // document.getElementById('text').innerHTML = document.getElementById('text').innerHTML + '<table class="table">' + html + '</table>';
-
-      text.push(screens);
+      // console.log(jsons);
     }
-      reader.readAsText(f);
-
-      
-    }
-
-    // console.log(text);
-
-    // var allText = [{hi: 'michael'}];
-    // JSON.stringify(allText[0]);
-
-
     
-    // console.log(allText[0]);
-
-    // document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
-
-    // document.getElementById('text').innerHTML = '<ul>' + allText.join(''); + '</ul>';
-
-    // document.getElementById('text').innerHTML = '<ul>' + JSON.stringify(json) + '</ul>';
-
-    
+    reader.readAsText(f);
   }
 
-  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+  function displayDiff(langCode, name) {
+    var oldData = jsons.old[langCode][name];
+    var newData = jsons.new[langCode][name];
+    var transSSchecked = $('#transSScheck').is(":checked");
+
+    // console.log(oldData);
+    // console.log(newData);
+
+    var $thead = $('#output thead');
+    var $tbody = $('#output tbody');
+
+    var oldHeader = {"Namespace": oldData.name, "Language/ Locale": oldData.langCode, "Direction": oldData.dir}
+    var newHeader = {"Namespace": newData.name, "Language/ Locale": newData.langCode, "Direction": newData.dir}
+
+    for (var h in newHeader) {
+      var diff = diffString(oldHeader[h], newHeader[h]);
+      $thead.append("<tr class='table-secondary'><th colspan='" + (transSSchecked ? 2 : 1) + "'></th>" +
+                    "<th>" + h + "</th>" + 
+                    "<th style='width: 125px; max-width: 125px' class='pr-3'>" + diff + "</th>" +
+                    "<th style='min-width: 350px'>" + newHeader[h] + "</th>" +
+                    "<th style='min-width: 300px'></th></tr>");
+    }
+
+    $tbody.append(function() {
+      html = "";
+      var screenNum = 0;
+
+      for (var s in newData.screens) {
+        var screenNameOnly = s.slice(s.indexOf('_') + 1);
+        console.log(screenNameOnly);
+
+        html += "<tr class='table-primary'><th colspan='" + (transSSchecked ? 2 : 1) + "' class='py-3'>" + s + "</th><th class='py-3'>" + screenNameOnly + "</th><th class='py-3 pr-3'>Diff</th><th class='py-3'>New (Formatted)</th><th class='py-3'>Edit</th></tr><tr>"
+
+        if (s !== "DISPLAY_NAME") {
+          var screenNumStr = "";
+          if (screenNum < 100) {
+            screenNumStr += "0";
+            if (screenNum < 10) {
+              screenNumStr += "0";
+            }
+          }
+          screenNumStr += screenNum;
+
+          var imgPathEN = "ex/TD0157/en_US/SS/PROMIS-29_" + screenNumStr + "_" + s + ".png";
+          var imgPathFL = "ex/TD0157/" + langCode + "/SS/PROMIS-29_" + screenNumStr + "_" + s + ".png";
+          // console.log(imgPath);
+
+          var imgWidth = 750;
+          html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathEN + "' style='max-width: " + imgWidth + "px'></img></td>"
+
+          if (transSSchecked) {
+           html += "<th rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
+          }
+        } else {
+          html += "<td colspan='" + (transSSchecked ? 2 : 1) + "' rowspan=" + Object.keys(newData.screens[s]).length + "></td>";
+        }
+
+        var firstline = true;
+
+        for (var line in newData.screens[s]) {
+          if (!firstline) {
+            html += "<tr>";
+          }
+
+          var rows = Math.ceil(newData.screens[s][line].length / 39);
+          var oldEscp = oldData.screens[s][line];
+          var newEscp = newData.screens[s][line];
+          var diff = diffString(oldEscp, newEscp)
+            .replace(/<del>/g, "[del]").replace(/<ins>/g, "[ins]").replace(/<mute>/g, "[mute]") // disguise <del>, <ins>, and <mute>
+            .replace(/<\/del>/g, "[\/del]").replace(/<\/ins>/g, "[\/ins]").replace(/<\/mute>/g, "[\/mute]") // disguise </del>, </ins>, and <mute>
+            .replace(/>/g, "&gt;").replace(/</g, "&lt;") // escape < and >
+            .replace(/\[del\]/g, "<del>").replace(/\[ins\]/g, "<ins>").replace(/\[mute\]/g, "<mute>") // reveal <del>, <ins>, and <mute>
+            .replace(/\[\/del\]/g, "<\/del>").replace(/\[\/ins\]/g, "<\/ins>").replace(/\[\/mute\]/g, "<\/mute>"); // reveal </del>, </ins>, and </mute>
+          // console.log(diff);
+
+          var codeFontSize = 85;
+
+          html += "<th style='min-width: 100px; width: 125px; max-width: 150px; white-space: normal; word-break:break-all;'>" + line.slice(15) + "</th>" +
+            "<td style='font-size: " + codeFontSize + "%; word-break: break-all; width: 250px; max-width: 250px' class='pr-3'>" + diff + "</td>" +
+            "<td>" + newData.screens[s][line] + "</td>" +
+            "<td><textarea class='form-control' style='width: 100%; font-size: " + codeFontSize + "%; word-break: break-all' rows='" + rows + "'>" + newData.screens[s][line] + "</textarea></td>" +
+            "</tr>"
+          firstline = false;
+        }
+
+        screenNum++;
+        html += "<th class='py-4' colspan='2' style='border: 0'><th class='py-4' colspan='4'></th>";
+      }
+
+      return html
+    });
+  }
+
+  var jsons = {old: {}, new: {}};
+
+  function handleFileSelect(evt, ver) {
+    var files = evt.target.files; // FileList object
+    
+    for (var i = 0, f; f = files[i]; i++) {
+      readFile(f, ver);
+
+      // var ver = "";
+      // if (i == 0) {
+      //   ver = "old";
+      // } else if (i == 1) {
+      //   ver = "new";
+      // } else {
+      //   ver = "new" + i
+      // }
+
+      // filename langCode
+      // var langCode = f.name.slice(-10).slice(0, 5);
+      // console.log(langCode);
+    }
+  }
+
+  document.getElementById('oldfiles').addEventListener('change', function(evt) {
+    handleFileSelect(evt, "old");
+  }, false);
+
+  document.getElementById('newfiles').addEventListener('change', function(evt) {
+    handleFileSelect(evt, "new");
+  }, false);
+
+  $('#reset').click(function() {
+    // console.log('reset!');
+    $('#text ul, #output thead, #output tbody').empty();
+    jsons = {old: {}, new: {}};
+  });
+
+  $('#display').click(function() {
+    displayDiff("hu_HU", "PROMIS29");
+  });
+
 </script>
 </body>
 </html>
