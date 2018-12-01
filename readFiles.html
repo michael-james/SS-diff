@@ -1,0 +1,56 @@
+<input type="file" id="files" name="files[]" multiple />
+<output id="list"></output>
+<output style="white-space: pre-wrap" id="text"></output>
+
+<script src="diff.js"></script>
+
+<script>
+  function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    
+
+    // files is a FileList of File objects. List some properties.
+    var output = [];
+    
+    for (var i = 0, f; f = files[i]; i++) {
+      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                  f.size, ' bytes, last modified: ',
+                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                  '</li>');
+
+        var allText = [];
+
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      var text = reader.result;
+      // allText.push(text);
+      var j = JSON.parse(text);
+      // console.log(j.namespace)
+      allText.push(j);
+      // console.log(JSON.stringify(j));
+      //console.log(text);
+      console.log(allText[0]);
+      document.getElementById('text').innerHTML = document.getElementById('text').innerHTML + '<ul>' + JSON.stringify(allText[0], null, 4); + '</ul>';
+
+      
+    }
+      reader.readAsText(f);
+
+    }
+
+    // var allText = [{hi: 'michael'}];
+    // JSON.stringify(allText[0]);
+
+
+    
+    console.log(allText[0]);
+
+    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+
+    document.getElementById('text').innerHTML = '<ul>' + allText.join(''); + '</ul>';
+  }
+
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+</script>
