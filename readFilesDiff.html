@@ -103,6 +103,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
     <script src="diff-SS.js"></script>
+    <script src="lib/resemble.js"></script>
 
 <script>
       
@@ -246,19 +247,35 @@
           }
           screenNumStr += screenNum;
 
+          ///////////////////////////
+          // IMAGES
+          ///////////////////////////
+
           var imgPathEN = "ex/TD0157/en_US/SS/PROMIS-29_" + screenNumStr + "_" + s + ".png";
           var imgPathFL = "ex/TD0157/" + langCode + "/SS/PROMIS-29_" + screenNumStr + "_" + s + ".png";
-          // console.log(imgPath);
+          var imgPathFLold = "ex/TD0157/" + langCode + "/SSold/PROMIS-29_" + screenNumStr + "_" + s + ".png";
+          var imgPathDiff = "";
+          // var imgPathDiff = resemble(imgPathFLold).compareTo(imgPathFL).onComplete(function(data) {
+          //   // console.log(data.getImageDataUrl());
+          //   var diffdata = data.getImageDataUrl()
+          //   // for (var d in diffdata) {
+          //   //   console.log(d, diffdata[d]);
+          //   // }
+          //   console.log(typeof diffdata, diffdata)
+          //   return diffdata
+          // });
 
           var imgWidth = 700;
           html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathEN + "' style='max-width: " + imgWidth + "px'></img></td>"
 
-          // image fl
-          if (transSSchecked) {
-            html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")'></div></div></td>"
+          html += "<td></td>"
 
-            // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
-          }
+          // // image fl
+          // if (transSSchecked) {
+          //   html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-img='" + imgPathFL + "' data-diff='" + imgPathDiff + "' class='image-diff'></div></div></td>"
+
+          //   // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
+          // }
         } else {
           html += "<td colspan='" + (transSSchecked ? 2 : 1) + "' rowspan=" + Object.keys(newData.screens[s]).length + "></td>";
         }
@@ -297,6 +314,22 @@
 
       return html
     });
+
+    // $(".image-diff").hover(
+    //   function () {
+    //     // background-image
+        
+    //     // console.log(diffImageSrc)
+
+    //     $(this).css('background-image', "url(" + $(this).data('diff') + ")");
+    //     // console.log('hover in...', $(this).css('background-image'))
+    //        // $(this).attr("src", diffImageSrc);
+    //   },
+    //   function () {
+    //     // console.log('hover out...', $(this).css('background-image'))
+    //       $(this).css('background-image', "url(" + $(this).data('img') + ")");
+    //   }
+    // );
   }
 
   var jsons = {old: {}, new: {}};
@@ -347,6 +380,85 @@
 
   // testing
   // displayDiff("hu_HU", "PROMIS29");
+
+  ///////////////////////////////////////
+  // RESEMBLE -- IMAGE DIFF
+  ///////////////////////////////////////
+
+  resemble.outputSettings({ errorType: "movement", transparency: 1 });
+  var oldImage = 'ex/TD0157/hu_HU/2018.10.22/SS/PROMIS-29_002_PROMIS29_PR020.png';
+  var newImage = 'ex/TD0157/hu_HU/2018.11.08/SS/PROMIS-29_002_PROMIS29_PR020.png';
+  resemble(oldImage).compareTo(newImage).onComplete(onComplete);
+
+  var diffImageSrc = "";
+
+  function onComplete(data) {
+    console.log(data);
+    var diffImage = new Image();
+    diffImage.src = data.getImageDataUrl();
+    diffImageSrc = data.getImageDataUrl();
+
+    $(diffImage).click(function(){
+      var w = window.open("about:blank", "_blank");
+      var html = w.document.documentElement;
+      var body = w.document.body;
+
+      html.style.margin = 0;
+      html.style.padding = 0;
+      body.style.margin = 0;
+      body.style.padding = 0;
+
+      var img = w.document.createElement("img");
+      img.src = diffImage.src;
+      img.alt = "image diff";
+      img.style.maxWidth = "100%";
+      // img.addEventListener("click", function() {
+      //  this.style.maxWidth = this.style.maxWidth === "100%" ? "" : "100%";
+      // });
+      body.appendChild(img);
+    });
+
+    // $('#image-diff').html(diffImage);
+    // resemble.outputSettings({ useCrossOrigin: false });
+  }
+
+  // $("#image-diff").hover(
+  //     function () {
+  //       // background-image
+        
+  //       // console.log(diffImageSrc)
+
+  //       var diffdata = $(this).data('diff');
+  //       for (var d in diffdata) {
+  //         console.log(d, diffdata);
+  //       }
+
+
+  //       $(this).css('background-image', "url(" + $(this).data('diff') + ")");
+  //       // console.log('hover in...', $(this).css('background-image'))
+  //          // $(this).attr("src", diffImageSrc);
+  //     },
+  //     function () {
+  //       // console.log('hover out...', $(this).css('background-image'))
+  //         $(this).css('background-image', "url(" + $(this).data('img') + ")");
+  //     }
+  // );
+
+  // $("#image-diff").hover(
+  //     function () {
+  //       // background-image
+        
+  //       // console.log(diffImageSrc)
+
+  //       $(this).css('background-image', "url(" + diffImageSrc + ")");
+  //       console.log('hover in...', $(this).css('background-image'))
+  //          // $(this).attr("src", diffImageSrc);
+  //     },
+  //     function () {
+  //       console.log('hover out...', $(this).css('background-image'))
+  //         $(this).css('background-image', "url(" + newImage + ")");
+  //     }
+  // );
 
 </script>
 </body>
