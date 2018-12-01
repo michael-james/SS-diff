@@ -255,13 +255,14 @@
           var imgPathFL = "ex/TD0157/" + langCode + "/SS/PROMIS-29_" + screenNumStr + "_" + s + ".png";
           var imgPathFLold = "ex/TD0157/" + langCode + "/SSold/PROMIS-29_" + screenNumStr + "_" + s + ".png";
           var imgPathDiff = "";
-          // var imgPathDiff = resemble(imgPathFLold).compareTo(imgPathFL).onComplete(function(data) {
+
+          // imgPathDiff = resemble(imgPathFLold).compareTo(imgPathFL).onComplete(function(data) {
           //   // console.log(data.getImageDataUrl());
           //   var diffdata = data.getImageDataUrl()
           //   // for (var d in diffdata) {
           //   //   console.log(d, diffdata[d]);
           //   // }
-          //   console.log(typeof diffdata, diffdata)
+          //   // console.log(typeof diffdata, diffdata)
           //   return diffdata
           // });
 
@@ -270,7 +271,7 @@
 
           // image fl
           if (transSSchecked) {
-            html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-img='" + imgPathFL + "' data-diff='" + imgPathDiff + "' class='image-diff'></div></div></td>"
+            html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-new='" + imgPathFL + "' data-old='" + imgPathFLold + "' class='image-diff'></div></div></td>"
 
             // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
           }
@@ -309,9 +310,35 @@
         screenNum++;
         html += "<th class='py-4' colspan='2' style='border: 0'><th class='py-4' colspan='4'></th>";
       }
-
       return html
     });
+
+    $('.image-diff').each(function(i, $elem) {
+      var oldFLimg = $(this).data('old');
+      var newFLimg = $(this).data('new');
+      // console.log(oldFLimg, newFLimg);
+
+      $img = $(this);
+
+      resemble(oldFLimg).compareTo(newFLimg).onComplete(function(data) {
+        onImgDiffComplete($img, data);
+      });
+    });
+
+    function onImgDiffComplete($img, data) {
+      console.log($img);
+
+      var imgPathDiff = data.getImageDataUrl()
+
+      console.log(typeof imgPathDiff, imgPathDiff.slice(0, 50));
+      
+      // console.log(typeof imgPathDiff, imgPathDiff);
+      
+      $img.data('hi', 'hello!');
+      $img.data('diff', imgPathDiff);
+
+      console.log($img.data());
+    }
 
     // $(".image-diff").hover(
     //   function () {
@@ -383,42 +410,42 @@
   // RESEMBLE -- IMAGE DIFF
   ///////////////////////////////////////
 
-  resemble.outputSettings({ errorType: "movement", transparency: 1 });
-  var oldImage = 'ex/TD0157/hu_HU/2018.10.22/SS/PROMIS-29_002_PROMIS29_PR020.png';
-  var newImage = 'ex/TD0157/hu_HU/2018.11.08/SS/PROMIS-29_002_PROMIS29_PR020.png';
-  resemble(oldImage).compareTo(newImage).onComplete(onComplete);
+  // resemble.outputSettings({ errorType: "movement", transparency: 1 });
+  // var oldImage = 'ex/TD0157/hu_HU/2018.10.22/SS/PROMIS-29_002_PROMIS29_PR020.png';
+  // var newImage = 'ex/TD0157/hu_HU/2018.11.08/SS/PROMIS-29_002_PROMIS29_PR020.png';
+  // resemble(oldImage).compareTo(newImage).onComplete(onComplete);
 
-  var diffImageSrc = "";
+  // var diffImageSrc = "";
 
-  function onComplete(data) {
-    console.log(data);
-    var diffImage = new Image();
-    diffImage.src = data.getImageDataUrl();
-    diffImageSrc = data.getImageDataUrl();
+  // function onComplete(data) {
+  //   console.log(data);
+  //   var diffImage = new Image();
+  //   diffImage.src = data.getImageDataUrl();
+  //   diffImageSrc = data.getImageDataUrl();
 
-    $(diffImage).click(function(){
-      var w = window.open("about:blank", "_blank");
-      var html = w.document.documentElement;
-      var body = w.document.body;
+  //   $(diffImage).click(function(){
+  //     var w = window.open("about:blank", "_blank");
+  //     var html = w.document.documentElement;
+  //     var body = w.document.body;
 
-      html.style.margin = 0;
-      html.style.padding = 0;
-      body.style.margin = 0;
-      body.style.padding = 0;
+  //     html.style.margin = 0;
+  //     html.style.padding = 0;
+  //     body.style.margin = 0;
+  //     body.style.padding = 0;
 
-      var img = w.document.createElement("img");
-      img.src = diffImage.src;
-      img.alt = "image diff";
-      img.style.maxWidth = "100%";
-      // img.addEventListener("click", function() {
-      //  this.style.maxWidth = this.style.maxWidth === "100%" ? "" : "100%";
-      // });
-      body.appendChild(img);
-    });
+  //     var img = w.document.createElement("img");
+  //     img.src = diffImage.src;
+  //     img.alt = "image diff";
+  //     img.style.maxWidth = "100%";
+  //     // img.addEventListener("click", function() {
+  //     //  this.style.maxWidth = this.style.maxWidth === "100%" ? "" : "100%";
+  //     // });
+  //     body.appendChild(img);
+  //   });
 
-    // $('#image-diff').html(diffImage);
-    // resemble.outputSettings({ useCrossOrigin: false });
-  }
+  //   // $('#image-diff').html(diffImage);
+  //   // resemble.outputSettings({ useCrossOrigin: false });
+  // }
 
   // $("#image-diff").hover(
   //     function () {
