@@ -50,11 +50,13 @@
         height: 412px;
       }
 
-      .edit-text, .add-comment {
+      /*comments*/
+
+      .edit-text, .add-comment, .mark-checked {
         cursor: pointer;
       }
 
-      .edit-text:hover, .add-comment:hover {
+      .edit-text:hover, .add-comment:hover, .mark-checked:hover {
         color: #212529 !important;
       }
 
@@ -66,7 +68,7 @@
         color: green !important;
       }*/
 
-      tr:hover .edit-text, tr:hover .add-comment {
+      tr:hover .edit-text, tr:hover .add-comment, tr:hover .mark-checked {
         /*color: red !important;*/
         visibility: visible !important;
       }
@@ -137,6 +139,8 @@
     <script src="lib/resemble.js"></script>
 
 <script>
+
+  var commentType = 0;
       
   function readFile(f, ver) {
     // $('#text ul').append('<li><strong>' + ver.toUpperCase() + ": " + escape(f.name) + '</strong> (' + (f.type || 'n/a') + ') - ' + f.size + ' bytes, last modified: ' + (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a') + '</li>');
@@ -346,8 +350,12 @@
           var codeFontSize = 85;
 
           html += 
-            "<td data-id='" + line + "' class='main-text pr-3'><span class='badge badge-secondary'>" + line.slice(15) + "</span><i class='fas fa-edit edit-text text-muted pl-3' style='visibility: hidden'></i><i class='far fa-comment add-comment pt-2 text-muted pl-2' style='visibility: hidden'></i><div class='current-text'>" + newData.screens[s][line] + "</div></td>" +
-            "<td style='font-size: " + codeFontSize + "%; word-break: break-all; width: 300px; max-width: 325px' class='pr-3 comments'></td>" +
+            "<td data-id='" + line + "' class='main-text pr-3'><span class='badge badge-secondary string-id-badge'>" + line.slice(15) + "</span>" + 
+            "<i class='fas fa-check text-muted mark-checked pl-2' style='visibility: hidden'></i>" +
+            "<i class='fas fa-edit edit-text text-muted pl-2' style='visibility: hidden'></i>" +
+            "<i class='far fa-comment add-comment text-muted pl-2' style='visibility: hidden'></i>" +
+            "<div class='current-text'>" + newData.screens[s][line] + "</div></td>" +
+            "<td style='font-size: " + codeFontSize + "%; width: 300px; max-width: 325px' class='pr-3 comments'></td>" +
             "<td style='font-size: " + codeFontSize + "%; width: 300px; max-width: 325px' class='pr-3 diff'>" + diff + "</td>" +
             "</tr>"
           firstline = false;
@@ -417,6 +425,16 @@
       addActionCard($(this));
     });
 
+    $('.mark-checked').click(function() {
+      var $comments = $(this).parent().siblings('.comments');
+      var $badge = $(this).siblings('.string-id-badge');
+
+      $("<div><i class='far fa-check-square text-success'></i> <strong>Dominik (LG)</strong></div>" +
+        "<div><i class='fas fa-check-square text-success'></i> <strong>Sarah (TPT)</strong></div>"
+      ).appendTo($comments);
+      $badge.removeClass('badge-secondary').addClass('badge-success');
+    });
+
     function addActionCard($btn, edit) {
       edit = edit || false;
       var $text = $btn.siblings('.current-text');
@@ -442,13 +460,44 @@
             "<input type='radio' id='radio2" + id + "' name='radio" + id + "' class='custom-control-input'>" +
             "<label class='custom-control-label' for='radio2" + id + "'>needed</label>" +
           "</div></div>" +
-
-          "<button class='btn btn-primary btn-sm'>Save</button> <button class='btn btn-outline-secondary btn-sm'>Preview</button></div></div>").appendTo($text).find('.close').click(function() {
-
+          "</div></div>").appendTo($text).find('.close')
+          .click(function() {
             $(this).closest('.card').remove();
           });
-      console.log($text);
-      console.log("let's edit text!", val)
+
+      // Save
+      $("<button class='btn btn-primary btn-sm'>Save</button>").appendTo($btn.siblings('.current-text').find('.card-body'))
+        .click(function() {
+          var $badge = $(this).closest('.main-text').find('.string-id-badge');
+          console.log($badge);
+
+          var $comments = $btn.parent().siblings('.comments');
+          
+          if (commentType % 3 == 0) {
+            $("<div><i class='far fa-check-square text-success'></i> <strong>Dominik (LG)</strong> removed extra space</div>" +
+              "<div><i class='fas fa-check-square text-success'></i> <strong>Sarah (TPT)</strong></div>"
+            ).appendTo($comments);
+            $badge.removeClass('badge-secondary').addClass('badge-success');
+          } else if (commentType % 3 == 1) {
+            $("<div><i class='far fa-square'></i> <strong>Dominik (LG)</strong> replace \"négyzet bejelöléséve\" with \"válasz kiválasztásáva\"</div>" +
+              "<div><i class='far fa-check-square'></i> <strong>Sarah (TPT)</strong> updated</div>" +
+              "<div><i class='fas fa-check-square'></i> <strong>Michael (ERT)</strong></div>" + 
+              "<div><i class='far fa-check-square text-success'></i> <strong>Dominik (LG)</strong></div>" +
+              "<div><i class='fas fa-check-square text-success'></i> <strong>Sarah (TPT)</strong></div>"
+            ).appendTo($comments);
+            $badge.removeClass('badge-secondary').addClass('badge-success');
+          } else{
+            $("<div><i class='far fa-square text-warning'></i> <strong>Dominik (LG)</strong> the word \"Valamennyire\" is too close to \"Meglehetősen\"</div>" +
+              "<div><i class='far fa-square text-danger'></i> <strong>Sarah (TPT)</strong></div>"
+            ).appendTo($comments);
+            $badge.removeClass('badge-secondary').addClass('badge-danger');
+          }
+
+          commentType++;
+
+          $(this).closest('.card').remove();
+        });
+      $("<button class='btn btn-outline-secondary btn-sm ml-2'>Preview</button>").appendTo($btn.siblings('.current-text').find('.card-body'));
     };
   }
 
