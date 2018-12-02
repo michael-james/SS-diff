@@ -45,6 +45,10 @@
         width: 700px;
         height: 412px;
       }
+
+      /*.no-table-hover:hover {
+        background-color: transparent;
+      }*/
     </style>
   </head>
   <body style="font-family: sans-serif;">
@@ -93,8 +97,6 @@
 
     </div>
   </body>
-
-
 
 <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -267,11 +269,11 @@
           // });
 
           var imgWidth = 700;
-          html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathEN + "' style='max-width: " + imgWidth + "px'></img></td>"
+          html += "<td rowspan=" + Object.keys(newData.screens[s]).length + " class='no-table-hover'><img src='" + imgPathEN + "' style='max-width: " + imgWidth + "px'></img></td>"
 
           // image fl
           if (transSSchecked) {
-            html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-new='" + imgPathFL + "' data-old='" + imgPathFLold + "' class='image-diff'></div></div></td>"
+            html += "<td rowspan=" + Object.keys(newData.screens[s]).length + " class='no-table-hover'><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-new='" + imgPathFL + "' data-old='" + imgPathFLold + "' class='image-diff'></div></div></td>"
 
             // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
           }
@@ -287,9 +289,12 @@
           }
 
           var rows = Math.ceil(newData.screens[s][line].length / 39);
-          var oldEscp = oldData.screens[s][line];
-          var newEscp = newData.screens[s][line];
-          var diff = diffString(oldEscp, newEscp)
+          var oldStr = oldData.screens[s][line];
+          var newStr = newData.screens[s][line];
+
+          // console.log(oldStr, newStr);
+
+          var diff = diffString(oldStr, newStr)
             .replace(/<del>/g, "[del]").replace(/<ins>/g, "[ins]").replace(/<mute>/g, "[mute]") // disguise <del>, <ins>, and <mute>
             .replace(/<\/del>/g, "[\/del]").replace(/<\/ins>/g, "[\/ins]").replace(/<\/mute>/g, "[\/mute]") // disguise </del>, </ins>, and <mute>
             .replace(/>/g, "&gt;").replace(/</g, "&lt;") // escape < and >
@@ -313,48 +318,46 @@
       return html
     });
 
-    $('.image-diff').each(function(i, $elem) {
-      var oldFLimg = $(this).data('old');
-      var newFLimg = $(this).data('new');
+    $('.image-diff').each(function(i, elem) {
+      var oldFLimg = $(elem).data('old');
+      var newFLimg = $(elem).data('new');
       // console.log(oldFLimg, newFLimg);
 
-      $img = $(this);
-
+      resemble.outputSettings({ errorType: "movement", transparency: 0.6 });
       resemble(oldFLimg).compareTo(newFLimg).onComplete(function(data) {
-        onImgDiffComplete($img, data);
+        onImgDiffComplete($(elem), data, oldFLimg, newFLimg);
       });
     });
 
-    function onImgDiffComplete($img, data) {
-      console.log($img);
+    function onImgDiffComplete($img, data, oldFLimg, newFLimg) {
+      // console.log($img);
 
       var imgPathDiff = data.getImageDataUrl()
 
-      console.log(typeof imgPathDiff, imgPathDiff.slice(0, 50));
+      // console.log(imgPathDiff.slice(0, 50));
       
       // console.log(typeof imgPathDiff, imgPathDiff);
       
-      $img.data('hi', 'hello!');
+      // $img.data('hi', 'hello!');
       $img.data('diff', imgPathDiff);
 
-      console.log($img.data());
+      // $img.css('background-image', "url(" + imgPathDiff + ")");
+
+      $img.hover(
+        function () {
+          $(this).css('background-image', "url(" + imgPathDiff + ")");
+          // console.log("hover in...", $(this).css('background-image'));
+        },
+        function () {
+          $(this).css('background-image', "url(" + newFLimg + ")");
+          // console.log("hover out...", $(this).css('background-image'));
+        }
+      );
+
+      // console.log($img.data('diff').slice(0, 50));
     }
 
-    // $(".image-diff").hover(
-    //   function () {
-    //     // background-image
-        
-    //     // console.log(diffImageSrc)
-
-    //     $(this).css('background-image', "url(" + $(this).data('diff') + ")");
-    //     // console.log('hover in...', $(this).css('background-image'))
-    //        // $(this).attr("src", diffImageSrc);
-    //   },
-    //   function () {
-    //     // console.log('hover out...', $(this).css('background-image'))
-    //       $(this).css('background-image', "url(" + $(this).data('img') + ")");
-    //   }
-    // );
+    
   }
 
   var jsons = {old: {}, new: {}};
@@ -390,7 +393,8 @@
 
   $('#reset').click(function() {
     // console.log('reset!');
-    $('#text ul, #output thead, #output tbody').empty();
+    $('#text ul, #output thead, #output tbody, #selectjson').empty();
+    $('#selectjson').append("<option selected disabled>(choose a json)</option>");
     jsons = {old: {}, new: {}};
   });
 

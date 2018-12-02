@@ -22,11 +22,13 @@ function escape(s) {
 function diffString( o, n ) {
   // o = o.replace(/\s+$/, '');
   // n = n.replace(/\s+$/, '');
+  var log = false;
+  if ("Moyen-<br/>nement" == n) {
+    log = true;
+  }
 
   // var out = diff(o == "" ? [] : o.split(/\s+/), n == "" ? [] : n.split(/\s+/) ); // split by whitespace
-  var out = diff(o == "" ? [] : o.split(''), n == "" ? [] : n.split('') ); // split every charac
-
-  // console.log(out);
+  var out = diff(o == "" ? [] : o.split(''), n == "" ? [] : n.split(''),  log); // split every charac
 
   var str = "";
 
@@ -48,11 +50,17 @@ function diffString( o, n ) {
         str += '<del>' + escape(out.o[i]) + "</del>";
       }
   } else {
-    if (out.n[0].text == null) {
+    if (out.n[0].text == null || out.o[0].text == null) {
       for (n = 0; n < out.o.length && out.o[n].text == null; n++) {
         str += '<del>' + escape(out.o[n]) + "</del>";
       }
     }
+
+    // if (out.o[0].text == null) {
+    //   for (o = 0; o < out.o.length && out.o[n].text == null; o++) {
+    //     str += '<del>' + escape(out.o[n]) + "</del>";
+    //   }
+    // }
 
     for ( var i = 0; i < out.n.length; i++ ) {
       if (out.n[i].text == null) {
@@ -121,7 +129,7 @@ function diffString2( o, n ) {
   return { o : os , n : ns };
 }
 
-function diff( o, n ) {
+function diff( o, n, log) {
   var ns = new Object();
   var os = new Object();
   
@@ -143,6 +151,12 @@ function diff( o, n ) {
       o[ os[i].rows[0] ] = { text: o[ os[i].rows[0] ], row: ns[i].rows[0] };
     }
   }
+
+  if (log) {
+    console.log(o, n)  
+    console.log(os, ns)
+    console.log("some kind of output operation...")
+  }
   
   for ( var i = 0; i < n.length - 1; i++ ) {
     if ( n[i].text != null && n[i+1].text == null && n[i].row + 1 < o.length && o[ n[i].row + 1 ].text == null && 
@@ -158,6 +172,11 @@ function diff( o, n ) {
       n[i-1] = { text: n[i-1], row: n[i].row - 1 };
       o[n[i].row-1] = { text: o[n[i].row-1], row: i - 1 };
     }
+  }
+
+  if (log) {
+    console.log(o, n)  
+    console.log(os, ns)
   }
   
   return { o: o, n: n };
