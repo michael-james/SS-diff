@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en" height="100%">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- <link rel="icon" href="../../../../favicon.ico"> -->
+  
+  <base target="_top">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+  <title>Translatable Units Tracker - ERT Translations Hub</title>
+
+  <style>
+    table {
+        width: 300px;
+        table-layout: fixed;
+    }
+    /*tr:nth-child(odd) {
+        background-color: #f8f8f8;
+        opacity: .999;
+    }*/
+    /*td {
+        border: 1px solid #ccc;
+    }*/
+    th, td {
+        position: relative;
+    }
+    .bg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        /*background-color: #8ef;*/
+        z-index: -1;
+    }
+
+    .badge-100 {
+      font-size: 100%;
+    }
+
+    .badge-ert {
+      background-color: var(--teal);
+    }
+
+    .badge-vend {
+      background-color: var(--orange);
+    }
+
+    table.table-bordered,
+    table.table-bordered > thead > tr > th,
+    table.table-bordered > tbody > tr > td,
+    .table-bordered th {
+      border: 1px solid var(--gray);
+    }
+
+    tr.table-bordered-heavy > th, tr.table-bordered-heavy > td,
+    tr.table-bordered-heavy-top > th, tr.table-bordered-heavy-top > td {
+      border-top-width: 3px !important;
+    }
+
+    tr.table-bordered-heavy > th, tr.table-bordered-heavy > td,
+    tr.table-bordered-heavy-bottom > th, tr.table-bordered-heavy-bottom > td {
+      border-bottom-width: 3px !important;
+    }
+
+    tr.table-bordered-heavy th:first-child,
+    tr.table-bordered-heavy-top th:first-child {
+      border-left-width: 3px !important;
+    }
+
+    tr.table-bordered-heavy td:last-child,
+    tr.table-bordered-heavy-top td:last-child,
+    tr.table-bordered-heavy-bottom td:last-child,
+    tr.table-bordered-heavy-right td:last-child {
+      border-right-width: 3px !important;
+    }
+
+  </style>
+
+</head>
+
+<body class="pb-5" style="min-width: 100%; height: 100%; font-family: sans-serif;">
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="<?=url?>">ERT Translations Hub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="<?=url?>" id="home-link">Home <span class="sr-only">(current)</span></a>
+        </li> -->
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <!--<a class="nav-link" href="<?=url?>?page=Dashboard" id="dashboard-link">Dashboard</a>-->
+          <a class="nav-link" href="#">Michael James</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid" style="padding-top: 75px">
+
+    <h1>Translatable Units Tracker</h1>
+    <h2>Janssen 2380592RSF2002</h2>
+
+    <table class='table table-bordered table-hover'>
+      <thead>
+        <tr>
+          <th scope="col" rowspan="3">Batch</th>
+          <th scope="col" rowspan="3">Language</th>
+          <th scope="col" colspan="6">TPT</th>
+          <th scope="col">RWS</th>
+        </tr>
+        <tr>
+          <th scope="col" colspan="4">Subject Facing</th>
+          <th scope="col" colspan="2">Site Facing</th>
+          <th scope="col">Subject Facing</th>
+        </tr>
+        <tr style='word-break: break-word; font-size: 115%'>
+          <th scope="col">QLQ-C30</th>
+          <th scope="col">Daily Diary</th>
+          <th scope="col">Med Log</th>
+          <th scope="col">TM</th>
+          <th scope="col">Randomization Report</th>
+          <th scope="col">Visit Confirmation</th>
+          <th scope="col">EQ-5D-5L</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class='table-bordered-heavy-top'>
+          <th scope='row' rowspan='3'>
+            <div class='bg table-secondary' style='width: 92%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>Batch 1</span><br></div>
+              <div style='font-weight: normal;'>92%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>704/764</span>
+          </th>
+          <th scope="row">
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>esES</span></div>
+              <div style='font-weight: normal;'>100%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>Finished 3Dec2018</span>
+          </th>
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>43/43</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>30/30</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>50/50</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>73/73</div>
+              </div>
+            </div>
+          </td>
+          <td class='table-secondary'></td>
+          <td class='table-secondary'></td>
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>50/50</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class='table-bordered-heavy-right'>
+          <th scope="row">
+            <div class='bg table-secondary' style='width: 79%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>esUS</span></div>
+              <div style='font-weight: normal;'>81%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>9Dec [3] to</span> <span class='badge badge-secondary badge-100 badge-ert'>ERT</span>
+          </th>
+
+          <td>
+            <div class='bg table-primary' style='width: 16%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span><br></div>
+              <div>16%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>7/43</div>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 93%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span></div>
+              <div>93%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>28/30</div>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>50/50</div>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>73/73</div>
+            </div>
+          </td>
+          <td class='table-secondary'></td>
+          <td class='table-secondary'></td>
+          <td>
+            <div class='bg table-primary' style='width: 86%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-vend'>RWS</span> 12Dec [6]</div>
+              <div>86%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>43/50</div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class='table-bordered-heavy-bottom'>
+          <th scope="row">
+            <div class='bg table-secondary' style='width: 94%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>jaJP</span></div>
+              <div style='font-weight: normal;'>94%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>9Dec [3] to</span> <span class='badge badge-secondary badge-100 badge-ert'>ERT</span>
+          </th>
+
+          <td>
+            <div class='bg table-primary' style='width: 90%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span><br></div>
+              <div>90%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>39/43</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 73%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span><br></div>
+              <div>73%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>22/30</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span><br></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>50/50</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>73/73</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>12/12</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>14/14</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 94%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-vend'>RWS</span> 12Dec [6]</div>
+              <div>94%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>47/50</div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="table-bordered-heavy">
+          <th scope="row" rowspan="1">
+            <div class='bg table-secondary' style='width: 92%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>Batch 2</span><br></div>
+              <div style='font-weight: normal;'>93%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>229/246</span>
+          </th>
+          <th scope="row">
+            <div class='bg table-secondary' style='width: 94%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>huHU</span></div>
+              <div style='font-weight: normal;'>93%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>7Dec [4] to</span> <span class='badge badge-secondary badge-100 badge-vend'>TPT</span>
+          </th>
+
+          <td>
+              <div class='bg table-primary' style='width: 63%'></div>
+              <div class='bg table-danger' style='left: 93%; width: 7%'></div>
+              <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-ert'>ERT</span></div>
+              <div>70%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>30/43</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 87%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-ert'>ERT</span></div>
+              <div>87%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>26/30</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-ert'>ERT</span></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>50/50</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-success' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>COT</div>
+              <div>73/73</div>
+            </div>
+          </td>
+
+          <td class='table-secondary'></td>
+          <td class='table-secondary'></td>
+
+          <td>
+            <div class='bg table-primary' style='width: 82%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-vend'>RWS</span> 12Dec [6]</div>
+              <div>82%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>41/50</div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class='table-bordered-heavy'>
+          <th scope="row" rowspan="1">
+            <div class='bg table-secondary' style='width: 65%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>Batch 3</span><br></div>
+              <div style='font-weight: normal;'>65%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>160/246</span>
+          </th>
+
+          <th scope="row">
+            <div class='bg table-secondary' style='width: 65%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>kaGE</span></div>
+              <div style='font-weight: normal;'>65%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>13Dec [7] to</span> <span class='badge badge-secondary badge-100 badge-ert'>ERT</span>
+          </th>
+
+          <td>
+            <div class='bg table-primary' style='width: 40%'></div>
+            <div class='bg table-warning' style='left: 75%; width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-vend'>TPT</span></div>
+              <div>40%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.01</div>
+              <div>17/43</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 90%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-vend'>TPT</span></div>
+              <div>90%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.01</div>
+              <div>27/30</div>
+            </div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 86%'></div>
+            <div class='bg table-warning' style='left: 86%; width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-vend'>TPT</span></div>
+              <div>65%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.01</div>
+              <div>43/50</div>
+          </td>
+
+          <td>
+            <div class='bg table-primary' style='width: 100%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100 badge-vend'>TPT</span></div>
+              <div>100%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.01</div>
+              <div>73/73</div>
+            </div>
+          </td>
+
+          <td class='table-secondary'></td>
+          <td class='table-secondary'></td>
+
+          <td>
+            <div class='bg table-primary' style='width: 0%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span> 20Dec [14]</div>
+              <div>0%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.01</div>
+              <div>0/50</div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class='table-bordered-heavy'>
+          <th scope="row" rowspan="1">
+            <div class='bg table-secondary' style='width: 0%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>Batch 4</span><br></div>
+              <div style='font-weight: normal;'>0%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>0/246</span>
+          </th>
+          <th scope="row">
+            <div class='bg table-secondary' style='width: 0%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span style='font-size: 115%'>itIT</span></div>
+              <div style='font-weight: normal;'>0%</div>
+            </div>
+            <span class='text-muted' style='font-weight: normal;'>15Dec [9] to</span> <span class='badge badge-secondary badge-100 badge-ert'>ERT</span>
+          </th>
+          <td>
+            <div class='bg table-primary' style='width: 0%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span><br></div>
+              <div>0%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>0/43</div>
+            </div>
+          </td>
+          <td>
+            <div class='bg table-primary' style='width: 0%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span><br></div>
+              <div>0%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>0/30</div>
+            </div>
+          </td>
+          <td>
+            <div class='bg table-primary' style='width: 0%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span><br></div>
+              <div>0%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>0/50</div>
+            </div>
+          </td>
+          <td>
+            <div class='bg table-primary' style='width: 0%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span><br></div>
+              <div>0%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.02</div>
+              <div>0/73</div>
+            </div>
+          </td>
+          <td class='table-secondary'></td>
+          <td class='table-secondary'></td>
+          <td>
+            <div class='bg table-primary' style='width: 0%'></div>
+            <div class='d-flex justify-content-between'>
+              <div><span class='badge badge-secondary badge-100'>LG</span> 20Dec [14]</div>
+              <div>0%</div>
+            </div>
+            <div class='d-flex justify-content-between pt-1 text-muted'>
+              <div>v0.01</div>
+              <div>0/50</div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</body>
+
+<script>
+
+</script>
+
+</html>

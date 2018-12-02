@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en" height="100%">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- <link rel="icon" href="../../../../favicon.ico"> -->
+  
+  <base target="_top">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+  <title>Michael's Overview - ERT Translations Hub</title>
+
+  <style>
+    table {
+        width: 300px;
+        table-layout: fixed;
+    }
+    /*tr:nth-child(odd) {
+        background-color: #f8f8f8;
+        opacity: .999;
+    }*/
+    /*td {
+        border: 1px solid #ccc;
+    }*/
+    th, td {
+        position: relative;
+    }
+    .bg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        /*background-color: #8ef;*/
+        z-index: -1;
+    }
+
+    .badge-100 {
+      font-size: 100%;
+    }
+
+    .badge-ert {
+      background-color: var(--teal);
+    }
+
+    .badge-vend {
+      background-color: var(--orange);
+    }
+
+    table.table-bordered,
+    table.table-bordered > thead > tr > th,
+    table.table-bordered > tbody > tr > td,
+    .table-bordered th {
+      border: 1px solid var(--gray);
+    }
+
+    tr.table-bordered-heavy > th, tr.table-bordered-heavy > td,
+    tr.table-bordered-heavy-top > th, tr.table-bordered-heavy-top > td {
+      border-top-width: 3px !important;
+    }
+
+    tr.table-bordered-heavy > th, tr.table-bordered-heavy > td,
+    tr.table-bordered-heavy-bottom > th, tr.table-bordered-heavy-bottom > td {
+      border-bottom-width: 3px !important;
+    }
+
+    tr.table-bordered-heavy th:first-child,
+    tr.table-bordered-heavy-top th:first-child {
+      border-left-width: 3px !important;
+    }
+
+    tr.table-bordered-heavy td:last-child,
+    tr.table-bordered-heavy-top td:last-child,
+    tr.table-bordered-heavy-bottom td:last-child,
+    tr.table-bordered-heavy-right td:last-child {
+      border-right-width: 3px !important;
+    }
+
+    .table-gray {
+    	background-color: var(--gray);
+    }
+
+    .table-green {
+    	background-color: var(--green);
+    }
+
+  </style>
+
+</head>
+
+<body class="pb-5" style="min-width: 100%; height: 100%; font-family: sans-serif;">
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="<?=url?>">ERT Translations Hub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="<?=url?>" id="home-link">Home <span class="sr-only">(current)</span></a>
+        </li> -->
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <!--<a class="nav-link" href="<?=url?>?page=Dashboard" id="dashboard-link">Dashboard</a>-->
+          <a class="nav-link" href="#">Michael James</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid" style="padding-top: 75px">
+
+    <h1>Michael's Overview</h1>
+
+    <table class='table table-bordered table-hover'>
+      <thead>
+        <tr>
+          <th scope="col" colspan="2" width="335">Study Info</th>
+          <th scope="col" colspan="3" width="425">Timeline</th>
+          <th scope="col" colspan="5">Languages</th>
+          <th scope="col" colspan="7">Units</th>
+        </tr>
+        <tr style='word-break: break-word;'>
+        	<th scope="col" rowspan="2">Client</th>
+          <th scope="col" rowspan="2">Study</th>
+        	<th scope="col" rowspan="2" class='text-right'>Next Delivery to ERT</th>
+          <th scope="col" rowspan="2" class='text-right'>Planned Completion</th>
+          <th scope="col" rowspan="2" class='text-right'>Final COTs/SS Due</th>
+          <th scope="col" rowspan="2" class='text-right'>Cmpl'd</th>
+          <th scope="col" rowspan="2" class='text-right'>Late</th>
+          <th scope="col" rowspan="2" class='text-right'>SS Rev</th>
+          <th scope="col" rowspan="2" class='text-right'>Initial Tras</th>
+          <th scope="col" rowspan="2" class='text-right'>Total</th>
+          <th scope="col" rowspan="2" class='text-right'>Cmpl'd</th>
+          <th scope="col" rowspan="2" class='text-right'>Late</th>
+          <th scope="col" colspan="3">SS Rev (Ball in Court)</th>
+          <th scope="col" rowspan="2" class='text-right'>Initial Trans</th>
+          <th scope="col" rowspan="2" class='text-right'>Total</th>
+        </tr>
+        <tr style='word-break: break-all;'>
+          <th scope="col" class='text-right'>ERT</th>
+          <th scope="col" class='text-right'>Vendor</th>
+          <th scope="col" class='text-right'>Linguist</th>
+        </tr>
+      </thead>
+      <tbody>
+      	<tr>
+      		<th colspan="17" class='table-primary'>In-progress</th>
+      	</tr>
+
+      	<tr>
+      		<th>Theravance</th>
+      		<th>TD5345-2039</th>
+      		<td class='text-right'>Tu, Dec 4 [1]</td>
+      		<td class='text-right'>Mo, Jan 14 [28]</td>
+      		<td class='text-right text-warning'><strong>Th, Jan 10 [26]</strong></td>
+      		<td class='text-right'>
+      			<div class='bg table-secondary' style='width: 83%'></div>
+      			33
+      		</td>
+      		<td class='text-right text-danger'>2</td>
+      		<td class='text-right'>7</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>40</td>
+      		<td class='text-right'>
+      			<div class='bg table-secondary' style='width: 86%'></div>
+      			22,016
+      		</td>
+      		<td class='text-right text-danger'>233</td>
+      		<td class='text-right'>2,408</td>
+      		<td class='text-right'>1,208</td>
+      		<td class='text-right'>512</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>25,600</td>
+      	</tr>
+
+      	<tr>
+      		<th>Janssen</th>
+      		<th>2380592RSF2002</th>
+      		<td class='text-right'>Th, Dec 8 [4]</td>
+      		<td class='text-right'>Fr, Feb 15 [51]</td>
+      		<td class='text-right text-success'><strong>Th, Feb 21 [55]</strong></td>
+      		<td class='text-right'>
+      			<div class='bg table-secondary' style='width: 17%'></div>
+      			1
+      		</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>4</td>
+      		<td class='text-right'>1</td>
+      		<td class='text-right'>6</td>
+      		<td class='text-right'>
+      			<div class='bg table-secondary' style='width: 73%'></div>
+      			1,095
+      		</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>17</td>
+      		<td class='text-right'>35</td>
+      		<td class='text-right'>60</td>
+      		<td class='text-right'>296</td>
+      		<td class='text-right'>1,503</td>
+      	</tr>
+
+      	<tr style="font-weight: bolder">
+      		<th colspan="5" class='text-right table-secondary'>Total</th>
+      		<td class='text-right'>
+      			<div class='bg table-gray' style='width: 74%'></div>
+      			<div class='bg table-secondary' style='left: 74%; width: 100%'></div>
+      			34
+      		</td>
+      		<td class='text-right table-secondary text-danger'>2</td>
+      		<td class='text-right table-secondary'>11</td>
+      		<td class='text-right table-secondary'>1</td>
+      		<td class='text-right table-secondary'>46</td>
+      		<td class='text-right'>
+      			<div class='bg table-gray' style='width: 85%'></div>
+      			<div class='bg table-secondary' style='left: 85%; width: 100%'></div>
+      			23,111
+      		</td>
+      		<td class='text-right table-secondary text-danger'>233</td>
+      		<td class='text-right table-secondary'>2,425</td>
+      		<td class='text-right table-secondary'>1,243</td>
+      		<td class='text-right table-secondary'>572</td>
+      		<td class='text-right table-secondary'>296</td>
+      		<td class='text-right table-secondary'>27,103</td>
+      	</tr>
+
+
+      	<tr>
+      		<th colspan="17" class='table-success'>Completed</th>
+      	</tr>
+
+      	<tr>
+      		<th>Janssen</th>
+      		<th>80989098-6756</th>
+      		<td class='text-right'>Th, Dec 8 [4]</td>
+      		<td class='text-right'>Fr, Feb 15 [51]</td>
+      		<td class='text-right'><strong>Th, Feb 21 [55]</strong></td>
+      		<td class='text-right'>
+      			<div class='bg table-success' style='width: 100%'></div>
+      			23
+      		</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>23</td>
+      		<td class='text-right'>
+      			<div class='bg table-success' style='width: 100%'></div>
+      			8,832
+      		</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>0</td>
+      		<td class='text-right'>8,832</td>
+      	</tr>
+
+      	<tr>
+      		<th colspan="5" class='text-right table-success'>Total</th>
+      		<td class='text-right'>
+      			<div class='bg table-green' style='width: 100%'></div>
+      			23
+      		</td>
+      		<td class='text-right table-success'>0</td>
+      		<td class='text-right table-success'>0</td>
+      		<td class='text-right table-success'>0</td>
+      		<td class='text-right table-success'>23</td>
+      		<td class='text-right'>
+      			<div class='bg table-green' style='width: 100%'></div>
+      			8,832
+      		</td>
+      		<td class='text-right table-success'>0</td>
+      		<td class='text-right table-success'>0</td>
+      		<td class='text-right table-success'>0</td>
+      		<td class='text-right table-success'>0</td>
+      		<td class='text-right table-success'>0</td>
+      		<td class='text-right table-success'>8,832</td>
+      	</tr>
+
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

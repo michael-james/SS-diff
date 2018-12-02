@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
-    <title>Screenshot Review DEMO</title>
+    <title>Review / hu_HU / PROMIS-29 - ERT Translations Hub</title>
 
     <style>
 
@@ -82,8 +82,29 @@
       }*/
     </style>
   </head>
-  <body style="font-family: sans-serif;">
-    <div class="container-fluid">
+  <body class="pb-5" style="min-width: 100%; height: 100%; font-family: sans-serif;">
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="<?=url?>">ERT Translations Hub</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="<?=url?>" id="home-link">Home <span class="sr-only">(current)</span></a>
+          </li> -->
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <!--<a class="nav-link" href="<?=url?>?page=Dashboard" id="dashboard-link">Dashboard</a>-->
+            <a class="nav-link" href="#">Michael James</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid" style="padding-top: 65px">
 
       <div class="row p-3">
         <div class="col-sm-auto">
@@ -162,9 +183,9 @@
       var json = JSON.parse(result);
 
       var langCode = f.name.slice(-10).slice(0, 5);
-      var langCodeJSON = json.language + "_" + json.locale;
+      // var langCodeJSON = json.language + "_" + json.locale;
       var name = json.namespace;
-      object = {name: name, langCode: langCodeJSON, dir: json.direction, screens: {}};
+      object = {name: name, language: json.language, locale: json.locale, dir: json.direction, screens: {}};
 
       // const ordered = {};
       // Object.keys(unordered).sort().forEach(function(key) {
@@ -249,15 +270,15 @@
     var $thead = $('#output thead');
     var $tbody = $('#output tbody');
 
-    var oldHeader = {"Namespace": oldData.name, "Language/ Locale": oldData.langCode, "Direction": oldData.dir}
-    var newHeader = {"Namespace": newData.name, "Language/ Locale": newData.langCode, "Direction": newData.dir}
+    var oldHeader = {"Namespace": oldData.name, "Language": oldData.language, "Locale": oldData.locale, "Direction": oldData.dir}
+    var newHeader = {"Namespace": newData.name, "Language": newData.language, "Locale": newData.locale, "Direction": newData.dir}
 
     for (var h in newHeader) {
       var diff = diffString(oldHeader[h], newHeader[h]);
       $thead.append("<tr class='table-secondary'><th></th>" +
-                    "<th style='min-width: 350px' class='pr-3'>" + h + "<br>" + newHeader[h] + "</th>" +
-                    "<th class='pr-3'></th>" +
-                    "<th class='pr-3'>" + diff + "</th>" +
+                    "<th class='pr-3'>" + h + "</th>" + // main text // style='min-width: 350px'
+                    "<th class='pr-3' style='min-width: 250px'>" + newHeader[h] + "</th>" + // comments
+                    "<th class='pr-3'>" + diff + "</th>" +  // diff
                     "</tr>");
     }
 
@@ -269,7 +290,7 @@
         var screenNameOnly = s.slice(s.indexOf('_') + 1);
         // console.log(screenNameOnly);
 
-        html += "<tr class='table-primary'><th class='py-3'>" + s + "</th><th class='py-3'>" + screenNameOnly + "</th><th class='py-3'>Comments</th><th class='py-3 pr-3'>Diff</th></tr><tr>"
+        html += "<tr class='table-primary'><th class='py-3'>" + s + "</th><th class='py-3' style='min-width: 375px'>" + screenNameOnly + "</th><th class='py-3'>Comments</th><th class='py-3 pr-3'>Diff</th></tr><tr>"
 
         if (s !== "DISPLAY_NAME") {
           var screenNumStr = "";
@@ -347,16 +368,14 @@
             .replace(/\[\/del\]/g, "<\/del>").replace(/\[\/ins\]/g, "<\/ins>"); // reveal </del>, </ins>
           // console.log(diff);
 
-          var codeFontSize = 85;
-
           html += 
-            "<td data-id='" + line + "' class='main-text pr-3'><span class='badge badge-secondary string-id-badge'>" + line.slice(15) + "</span>" + 
+            "<td data-id='" + line + "' class='main-text pr-3' style='min-width: 375px; max-width: 625px'><span class='badge badge-secondary string-id-badge'>" + (line.length > 15 ? line.slice(15) : line) + "</span>" + 
             "<i class='fas fa-check text-muted mark-checked pl-2' style='visibility: hidden'></i>" +
             "<i class='fas fa-edit edit-text text-muted pl-2' style='visibility: hidden'></i>" +
             "<i class='far fa-comment add-comment text-muted pl-2' style='visibility: hidden'></i>" +
             "<div class='current-text'>" + newData.screens[s][line] + "</div></td>" +
-            "<td style='font-size: " + codeFontSize + "%; width: 300px; max-width: 325px' class='pr-3 comments'></td>" +
-            "<td style='font-size: " + codeFontSize + "%; width: 300px; max-width: 325px' class='pr-3 diff'>" + diff + "</td>" +
+            "<td style='font-size: " + 85 + "%;' class='pr-3 comments'></td>" +
+            "<td style='font-size: " + 70 + "%; max-width: 250px' class='pr-3 diff'>" + diff + "</td>" + //width: 300px; max-width: 325px
             "</tr>"
           firstline = false;
         }
@@ -429,8 +448,8 @@
       var $comments = $(this).parent().siblings('.comments');
       var $badge = $(this).siblings('.string-id-badge');
 
-      $("<div><i class='far fa-check-square text-success'></i> <strong>Dominik (LG)</strong></div>" +
-        "<div><i class='fas fa-check-square text-success'></i> <strong>Sarah (TPT)</strong></div>"
+      $("<div><i class='far fa-check-square text-success'></i> <strong>LG</strong> [DH]</div>" +
+        "<div><i class='fas fa-check-square text-success'></i> <strong>TPT</strong> [SL]</div>"
       ).appendTo($comments);
       $badge.removeClass('badge-secondary').addClass('badge-success');
     });
@@ -474,21 +493,21 @@
           var $comments = $btn.parent().siblings('.comments');
           
           if (commentType % 3 == 0) {
-            $("<div><i class='far fa-check-square text-success'></i> <strong>Dominik (LG)</strong> removed extra space</div>" +
-              "<div><i class='fas fa-check-square text-success'></i> <strong>Sarah (TPT)</strong></div>"
+            $("<div><i class='far fa-check-square text-success'></i> <strong>LG</strong> removed extra space [DH]</div>" +
+              "<div><i class='fas fa-check-square text-success'></i> <strong>TPT</strong> [SL]</div>"
             ).appendTo($comments);
             $badge.removeClass('badge-secondary').addClass('badge-success');
           } else if (commentType % 3 == 1) {
-            $("<div><i class='far fa-square'></i> <strong>Dominik (LG)</strong> replace \"négyzet bejelöléséve\" with \"válasz kiválasztásáva\"</div>" +
-              "<div><i class='far fa-check-square'></i> <strong>Sarah (TPT)</strong> updated</div>" +
-              "<div><i class='fas fa-check-square'></i> <strong>Michael (ERT)</strong></div>" + 
-              "<div><i class='far fa-check-square text-success'></i> <strong>Dominik (LG)</strong></div>" +
-              "<div><i class='fas fa-check-square text-success'></i> <strong>Sarah (TPT)</strong></div>"
+            $("<div><i class='far fa-square'></i> <strong>LG</strong> replace \"négyzet bejelöléséve\" with \"válasz kiválasztásáva\" [DH]</div>" +
+              "<div><i class='far fa-check-square'></i> <strong>TPT</strong> updated [SL]</div>" +
+              "<div><i class='fas fa-check-square'></i> <strong>ERT</strong> [MJ]</div>" + 
+              "<div><i class='far fa-check-square text-success'></i> <strong>LG</strong> [DH]</div>" +
+              "<div><i class='fas fa-check-square text-success'></i> <strong>TPT</strong> [SL]</div>"
             ).appendTo($comments);
             $badge.removeClass('badge-secondary').addClass('badge-success');
           } else{
-            $("<div><i class='far fa-square text-warning'></i> <strong>Dominik (LG)</strong> the word \"Valamennyire\" is too close to \"Meglehetősen\"</div>" +
-              "<div><i class='far fa-square text-danger'></i> <strong>Sarah (TPT)</strong></div>"
+            $("<div><i class='far fa-square text-warning'></i> <strong>LG</strong> the word \"Valamennyire\" is too close to \"Meglehetősen\" [DH]</div>" +
+              "<div><i class='far fa-square text-danger'></i> <strong>TPT</strong> [SL]</div>"
             ).appendTo($comments);
             $badge.removeClass('badge-secondary').addClass('badge-danger');
           }
