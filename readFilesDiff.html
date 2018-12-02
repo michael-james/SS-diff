@@ -227,8 +227,7 @@
     for (var h in newHeader) {
       var diff = diffString(oldHeader[h], newHeader[h]);
       $thead.append("<tr class='table-secondary'><th colspan='" + (transSSchecked ? 2 : 1) + "'></th>" +
-                    "<th>" + h + "</th>" + 
-                    "<th style='min-width: 350px'>" + newHeader[h] + "</th>" +
+                    "<th style='min-width: 350px'>" + h + "<br>" + newHeader[h] + "</th>" +
                     "<th></th>" + // edit
                     "<th style='width: 125px; max-width: 125px' class='pr-3'>" + diff + "</th>" +
                     "</tr>");
@@ -242,7 +241,7 @@
         var screenNameOnly = s.slice(s.indexOf('_') + 1);
         // console.log(screenNameOnly);
 
-        html += "<tr class='table-primary'><th colspan='" + (transSSchecked ? 2 : 1) + "' class='py-3'>" + s + "</th><th class='py-3'>" + screenNameOnly + "</th><th class='py-3'>Current Text</th><th class='py-3'>Edit</th><th class='py-3 pr-3'>Diff</th></tr><tr>"
+        html += "<tr class='table-primary'><th colspan='" + (transSSchecked ? 2 : 1) + "' class='py-3'>" + s + "</th><th class='py-3'>" + screenNameOnly + "</th><th class='py-3'>Edit</th><th class='py-3 pr-3'>Diff</th></tr><tr>"
 
         if (s !== "DISPLAY_NAME") {
           var screenNumStr = "";
@@ -308,8 +307,8 @@
 
           var codeFontSize = 85;
 
-          html += "<th style='min-width: 100px; width: 125px; max-width: 150px; white-space: normal; word-break:break-all;'>" + line.slice(15) + "</th>" +
-            "<td data-id='" + line + "'>" + newData.screens[s][line] + "</i></td>" +
+          html += 
+            "<td data-id='" + line + "'><span class='badge badge-secondary'>" + line.slice(15) + "</span><br>" + newData.screens[s][line] + "</i></td>" +
             "<td><i class='fas fa-edit edit-text text-muted'><i class='far fa-comment pt-2 text-muted' style='display: block;'></i></td>" +
             "<td style='font-size: " + codeFontSize + "%; word-break: break-all; width: 250px; max-width: 250px' class='pr-3'>" + diff + "</td>" +
             "</tr>"
