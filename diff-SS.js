@@ -71,7 +71,7 @@ function diffString( o, n ) {
         for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++ ) {
           pre += '<del>' + escape(out.o[n]) + "</del>";
         }
-        str += "" + "<mute>" + out.n[i].text + "</mute>" + pre;
+        str += "" + out.n[i].text + pre;
       }
     }
   }

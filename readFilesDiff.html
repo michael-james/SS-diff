@@ -18,13 +18,16 @@
       del {
         /*background: #FFE6E6;*/
         background: #f79c9c;
+        color: #212529;
       }
       ins {
         /*background: #E6FFE6;*/
         background: #b4fbb4;
         text-decoration: none;
+        color: #212529;
       }
-      mute {
+
+      .diff {
         color: #c6cace;
       }
 
@@ -47,9 +50,30 @@
         height: 412px;
       }
 
-      .fa-edit {
+      .edit-text, .add-comment {
         cursor: pointer;
       }
+
+      .edit-text:hover, .add-comment:hover {
+        color: #212529 !important;
+      }
+
+/*      tr:hover {
+        color: green;
+      }*/
+
+      /*td.main-text .edit-text {
+        color: green !important;
+      }*/
+
+      tr:hover .edit-text, tr:hover .add-comment {
+        /*color: red !important;*/
+        visibility: visible !important;
+      }
+
+      /*td.main-text:hover .edit-text {
+        visibility: visible;
+      }*/
 
       /*.no-table-hover:hover {
         background-color: transparent;
@@ -60,14 +84,6 @@
     <div class="container-fluid">
 
       <div class="row p-3">
-        <div class="col-sm-auto">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="transSScheck" checked>
-            <label class="form-check-label" for="defaultCheck1">
-              Show translated SS
-            </label>
-          </div>
-        </div>
         <div class="col-sm-auto">
           <div class="custom-file">
             <input type="file" id="oldfiles" class="custom-file-input" name="files[]" multiple />
@@ -80,7 +96,15 @@
             <label class="custom-file-label" for="defaultCheck1">New Files</label>
           </div>
         </div>
-        <div class="col-sm-auto offset-md-1">
+        <div class="col-sm-auto offset-xl-1">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="transSScheck" checked>
+            <label class="form-check-label" for="defaultCheck1">
+              Show translated SS
+            </label>
+          </div>
+        </div>
+        <div class="col-sm-auto">
           <select class="custom-select" id="selectjson">
             <option selected disabled>(choose a json)</option>
           </select>
@@ -226,10 +250,10 @@
 
     for (var h in newHeader) {
       var diff = diffString(oldHeader[h], newHeader[h]);
-      $thead.append("<tr class='table-secondary'><th colspan='" + (transSSchecked ? 2 : 1) + "'></th>" +
-                    "<th style='min-width: 350px'>" + h + "<br>" + newHeader[h] + "</th>" +
-                    "<th></th>" + // edit
-                    "<th style='width: 125px; max-width: 125px' class='pr-3'>" + diff + "</th>" +
+      $thead.append("<tr class='table-secondary'><th></th>" +
+                    "<th style='min-width: 350px' class='pr-3'>" + h + "<br>" + newHeader[h] + "</th>" +
+                    "<th class='pr-3'></th>" +
+                    "<th class='pr-3'>" + diff + "</th>" +
                     "</tr>");
     }
 
@@ -241,7 +265,7 @@
         var screenNameOnly = s.slice(s.indexOf('_') + 1);
         // console.log(screenNameOnly);
 
-        html += "<tr class='table-primary'><th colspan='" + (transSSchecked ? 2 : 1) + "' class='py-3'>" + s + "</th><th class='py-3'>" + screenNameOnly + "</th><th class='py-3'>Edit</th><th class='py-3 pr-3'>Diff</th></tr><tr>"
+        html += "<tr class='table-primary'><th class='py-3'>" + s + "</th><th class='py-3'>" + screenNameOnly + "</th><th class='py-3'>Comments</th><th class='py-3 pr-3'>Diff</th></tr><tr>"
 
         if (s !== "DISPLAY_NAME") {
           var screenNumStr = "";
@@ -272,17 +296,31 @@
           //   return diffdata
           // });
 
+          // var imgWidth = 700;
+          // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + " class='no-table-hover'><img src='" + imgPathEN + "' style='max-width: " + (imgWidth * 0.8).toFixed(0) + "px'></img></td>"
+
+          // // image fl
+          // if (transSSchecked) {
+          //   html += "<td rowspan=" + Object.keys(newData.screens[s]).length + " class='no-table-hover'><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-new='" + imgPathFL + "' data-old='" + imgPathFLold + "' class='image-diff'></div></div></td>"
+
+          //   // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
+          // }
+
           var imgWidth = 700;
-          html += "<td rowspan=" + Object.keys(newData.screens[s]).length + " class='no-table-hover'><img src='" + imgPathEN + "' style='max-width: " + (imgWidth * 0.8).toFixed(0) + "px'></img></td>"
+          html += "<td rowspan=" + Object.keys(newData.screens[s]).length + " class='no-table-hover'>"
 
           // image fl
           if (transSSchecked) {
-            html += "<td rowspan=" + Object.keys(newData.screens[s]).length + " class='no-table-hover'><div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-new='" + imgPathFL + "' data-old='" + imgPathFLold + "' class='image-diff'></div></div></td>"
+            html += "<div id='image-container'><div id='image-diff' style='background-image: url(" + imgPathFL + ")' data-new='" + imgPathFL + "' data-old='" + imgPathFLold + "' class='image-diff'></div></div>"
 
             // html += "<td rowspan=" + Object.keys(newData.screens[s]).length + "><img src='" + imgPathFL + "' style='max-width: " + imgWidth + "px'></img></td>"
           }
+
+          html += "<img class='pt-2' src='" + imgPathEN + "' style='max-width: " + (transSSchecked ? imgWidth * 0.8 : imgWidth).toFixed(0) + "px'></img></td>"
+
+
         } else {
-          html += "<td colspan='" + (transSSchecked ? 2 : 1) + "' rowspan=" + Object.keys(newData.screens[s]).length + "></td>";
+          html += "<td></td>";
         }
 
         var firstline = true;
@@ -298,25 +336,25 @@
           // console.log(oldStr, newStr);
 
           var diff = diffString(oldStr, newStr)
-            .replace(/<del>/g, "[del]").replace(/<ins>/g, "[ins]").replace(/<mute>/g, "[mute]") // disguise <del>, <ins>, and <mute>
-            .replace(/<\/del>/g, "[\/del]").replace(/<\/ins>/g, "[\/ins]").replace(/<\/mute>/g, "[\/mute]") // disguise </del>, </ins>, and <mute>
+            .replace(/<del>/g, "[del]").replace(/<ins>/g, "[ins]") // disguise <del>, <ins>
+            .replace(/<\/del>/g, "[\/del]").replace(/<\/ins>/g, "[\/ins]") // disguise </del>, </ins>
             .replace(/>/g, "&gt;").replace(/</g, "&lt;") // escape < and >
-            .replace(/\[del\]/g, "<del>").replace(/\[ins\]/g, "<ins>").replace(/\[mute\]/g, "<mute>") // reveal <del>, <ins>, and <mute>
-            .replace(/\[\/del\]/g, "<\/del>").replace(/\[\/ins\]/g, "<\/ins>").replace(/\[\/mute\]/g, "<\/mute>"); // reveal </del>, </ins>, and </mute>
+            .replace(/\[del\]/g, "<del>").replace(/\[ins\]/g, "<ins>") // reveal <del>, <ins>
+            .replace(/\[\/del\]/g, "<\/del>").replace(/\[\/ins\]/g, "<\/ins>"); // reveal </del>, </ins>
           // console.log(diff);
 
           var codeFontSize = 85;
 
           html += 
-            "<td data-id='" + line + "'><span class='badge badge-secondary'>" + line.slice(15) + "</span><br>" + newData.screens[s][line] + "</i></td>" +
-            "<td><i class='fas fa-edit edit-text text-muted'><i class='far fa-comment pt-2 text-muted' style='display: block;'></i></td>" +
-            "<td style='font-size: " + codeFontSize + "%; word-break: break-all; width: 250px; max-width: 250px' class='pr-3'>" + diff + "</td>" +
+            "<td data-id='" + line + "' class='main-text pr-3'><span class='badge badge-secondary'>" + line.slice(15) + "</span><i class='fas fa-edit edit-text text-muted pl-3' style='visibility: hidden'></i><i class='far fa-comment add-comment pt-2 text-muted pl-2' style='visibility: hidden'></i><div class='current-text'>" + newData.screens[s][line] + "</div></td>" +
+            "<td style='font-size: " + codeFontSize + "%; word-break: break-all; width: 300px; max-width: 325px' class='pr-3 comments'></td>" +
+            "<td style='font-size: " + codeFontSize + "%; width: 300px; max-width: 325px' class='pr-3 diff'>" + diff + "</td>" +
             "</tr>"
           firstline = false;
         }
 
         screenNum++;
-        html += "<th class='py-4' colspan='2' style='border: 0'><th class='py-4' colspan='4'></th>";
+        html += "<th class='py-4' style='border: 0'><th class='py-4' colspan='3'></th>";
       }
       return html
     });
@@ -372,13 +410,29 @@
     // });
 
     $('.edit-text').click(function() {
-      var $text = $(this).parent().prev('td');
+      addActionCard($(this), true);
+    });
+
+    $('.add-comment').click(function() {
+      addActionCard($(this));
+    });
+
+    function addActionCard($btn, edit) {
+      edit = edit || false;
+      var $text = $btn.siblings('.current-text');
       var val = $text.html();
       var id = $text.data('id');
 
+      var title = edit ? 'Edit' : 'Comment';
+
       var rows = Math.ceil(val.length / 39);
-      $("<div class='card my-2'><div class='card-body'><h5 class='card-title'>Edit<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></h5>" +
-          "<div class='form-group'><textarea class='form-control' style='width: 100%; font-size: 85%; word-break: break-all' rows='" + rows + "'>" + val + "</textarea></div>" + 
+      $("<div class='card my-2'><div class='card-body'><h5 class='card-title'>" + title + "<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></h5>" +
+
+          (edit ? "<div class='form-group'><textarea class='form-control' style='width: 100%; font-size: 85%; word-break: break-all' rows='" + rows + "'>" + val + "</textarea></div>" : '') +
+
+          "<div class='form-group'>" + (edit ? "Describe" : '') + 
+          "<textarea class='form-control' rows='2'></textarea></div>" + 
+
           "<div class='form-group'><span class='mr-3'>Status: change</span>" +
           "<div class='custom-control custom-radio custom-control-inline'>" +
             "<input type='radio' id='radio1" + id + "' name='radio" + id + "' class='custom-control-input'>" +
@@ -388,16 +442,14 @@
             "<input type='radio' id='radio2" + id + "' name='radio" + id + "' class='custom-control-input'>" +
             "<label class='custom-control-label' for='radio2" + id + "'>needed</label>" +
           "</div></div>" +
-          "<div class='form-group'>Describe:" + 
-          "<textarea class='form-control' rows='3'></textarea></div>" + 
+
           "<button class='btn btn-primary btn-sm'>Save</button> <button class='btn btn-outline-secondary btn-sm'>Preview</button></div></div>").appendTo($text).find('.close').click(function() {
 
             $(this).closest('.card').remove();
-
           });
       console.log($text);
       console.log("let's edit text!", val)
-    });
+    };
   }
 
   var jsons = {old: {}, new: {}};
